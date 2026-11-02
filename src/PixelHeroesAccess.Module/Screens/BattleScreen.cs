@@ -66,7 +66,9 @@ namespace PixelHeroesAccess.Module.Screens
             _lastState = state;
             if (state == BattleGUI.eBattleStates.PlayerSelectedNothing && previous != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget)
             {
-                // A new turn of the heroes': land on the first action of the first hero who may act.
+                // A new turn of the heroes': its cue, and focus on the first action of the first hero
+                // who may act.
+                ModuleMain.Cues?.Play(Core.Audio.AudioCue.TurnStart);
                 var hero = FirstReadyHero();
                 if (hero != null) Navigation.FocusNode(ActionId(hero.pHeroIndex, 0));
             }

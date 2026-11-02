@@ -20,9 +20,9 @@ EDGE = 0.006
 
 # group/name: (notes in Hz, note length s, gap s, waveform, amplitude)
 CUES = {
-    # main's boundary beeps: a triangle at 440 Hz onto your units, 660 Hz onto the enemy's, 80 ms.
-    "navigation/team_friendly": ([440], 0.08, 0.0, "tri", 0.22),
-    "navigation/team_enemy": ([660], 0.08, 0.0, "tri", 0.22),
+    # A rising pair as the heroes' turn begins; a falling pair as a hero falls.
+    "battle/turn_start": ([523, 784], 0.07, 0.02, "tri", 0.22),
+    "battle/hero_fallen": ([392, 262], 0.12, 0.02, "sine", 0.25),
 }
 
 

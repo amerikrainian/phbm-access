@@ -36,7 +36,7 @@ namespace PixelHeroesAccess.Tests
                 Assert.False(string.IsNullOrWhiteSpace(Strings.SoundLabel(cue)), "no label for " + cue);
                 Assert.Matches("^[a-z_]+$", AudioCues.FileName(cue));
             }
-            Assert.Equal("team_friendly", AudioCues.FileName(AudioCue.TeamFriendly));
+            Assert.Equal("turn_start", AudioCues.FileName(AudioCue.TurnStart));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace PixelHeroesAccess.Tests
         {
             var store = new MemoryStore();
             var sounds = new SoundVolumes(store);
-            var enemy = sounds.All[(int)AudioCue.TeamEnemy];
+            var enemy = sounds.All[(int)AudioCue.HeroFallen];
             Assert.Equal(100, enemy.Value);
             Assert.True(enemy.Adjust(-1));
             Assert.Equal(90, enemy.Value);
@@ -52,7 +52,7 @@ namespace PixelHeroesAccess.Tests
             Assert.False(sounds.Master.Adjust(+1)); // the master starts at the ceiling: no amplifying
             Assert.True(sounds.Master.Adjust(-1));
             Assert.Equal(80, enemy.Value); // the offset rides the master
-            Assert.Equal(0.8f, sounds.Gain(AudioCue.TeamEnemy), 3);
+            Assert.Equal(0.8f, sounds.Gain(AudioCue.HeroFallen), 3);
             for (int i = 0; i < 30; i++) enemy.Adjust(+1);
             Assert.Equal(SoundVolume.MaxVolume, enemy.Value); // clamped
             Assert.False(enemy.Adjust(+1));
@@ -60,7 +60,7 @@ namespace PixelHeroesAccess.Tests
             // Reloaded from the store, the same values come back.
             var again = new SoundVolumes(store);
             Assert.Equal(90, again.Master.Value);
-            Assert.Equal(SoundVolume.MaxVolume, again.All[(int)AudioCue.TeamEnemy].Value);
+            Assert.Equal(SoundVolume.MaxVolume, again.All[(int)AudioCue.HeroFallen].Value);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace PixelHeroesAccess.Tests
         {
             var store = new MemoryStore();
             var sounds = new SoundVolumes(store);
-            var interval = sounds.Interval(AudioCue.TeamFriendly);
+            var interval = sounds.Interval(AudioCue.TurnStart);
             Assert.Null(interval.Seconds);
             Assert.True(interval.TrySet("1.5"));
             Assert.Equal(1.5, interval.Seconds);
@@ -81,7 +81,7 @@ namespace PixelHeroesAccess.Tests
             Assert.True(interval.TrySet("  "));
             Assert.Null(interval.Seconds);
             Assert.Equal("", store.Values[interval.Key]);
-            Assert.Null(new SoundVolumes(store).Interval(AudioCue.TeamFriendly).Seconds);
+            Assert.Null(new SoundVolumes(store).Interval(AudioCue.TurnStart).Seconds);
         }
 
         [Fact]
@@ -93,28 +93,28 @@ namespace PixelHeroesAccess.Tests
             double now = 0;
             var player = new CuePlayer(new VolumeScaledEngine(engine, sounds), sounds, () => now);
 
-            Assert.True(player.Play(AudioCue.TeamFriendly));
+            Assert.True(player.Play(AudioCue.TurnStart));
             now = 0.01;
-            Assert.True(player.Play(AudioCue.TeamFriendly)); // blank: every event
+            Assert.True(player.Play(AudioCue.TurnStart)); // blank: every event
             Assert.Equal(2, engine.Plays.Count);
 
-            sounds.Interval(AudioCue.TeamFriendly).TrySet("1");
+            sounds.Interval(AudioCue.TurnStart).TrySet("1");
             now = 0.5;
-            Assert.False(player.Play(AudioCue.TeamFriendly)); // too soon after the last
-            Assert.True(player.Play(AudioCue.TeamEnemy));  // another cue keeps its own clock
+            Assert.False(player.Play(AudioCue.TurnStart)); // too soon after the last
+            Assert.True(player.Play(AudioCue.HeroFallen));  // another cue keeps its own clock
             now = 1.01;
-            Assert.True(player.Play(AudioCue.TeamFriendly));
+            Assert.True(player.Play(AudioCue.TurnStart));
             Assert.Equal(4, engine.Plays.Count);
 
             // The volume setting scales what reaches the engine.
-            sounds.All[(int)AudioCue.TeamFriendly].Adjust(-1);
+            sounds.All[(int)AudioCue.TurnStart].Adjust(-1);
             now = 3;
-            Assert.True(player.Play(AudioCue.TeamFriendly));
+            Assert.True(player.Play(AudioCue.TurnStart));
             Assert.Equal(0.9f, engine.Plays[engine.Plays.Count - 1].Volume, 3);
 
             player.Reset();
             now = 3.1;
-            Assert.True(player.Play(AudioCue.TeamFriendly)); // a new fight starts the clocks over
+            Assert.True(player.Play(AudioCue.TurnStart)); // a new fight starts the clocks over
         }
 
         // A WAV file as an editor writes it: RIFF, a fmt chunk, an odd-sized chunk to skip (padded to

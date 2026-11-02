@@ -72,8 +72,6 @@ namespace PixelHeroesAccess.Core.Strings
             // Buffer review (Ctrl plus arrows): the buffer names, the "name: line" readout on switching,
             // and the words when every buffer is empty.
             D("buffer.ui", "control"),
-            D("buffer.events", "events"),
-            D("buffer.quotes", "monster quotes"),
             D("buffer.none", "no buffer lines"),
             // {0} = the buffer's name, {1} = its current line.
             D("buffer.line", "{0}: {1}"),
@@ -111,98 +109,8 @@ namespace PixelHeroesAccess.Core.Strings
 
             // The role word for a modal dialog context.
             D("role.dialog", "dialog"),
-            // The game's Menu: its Discord link shows only the logo.
-            D("pause.discord", "Discord"),
-            // The words for the icons game text draws inline (<sprite name="Ember">), where the game has
-            // no name of its own for the icon (status effect, trigger and card effect icons read by the
-            // game's own names).
-            D("icon.attack", "attack"),
-            D("icon.armor", "armor"),
-            D("icon.ember", "ember"),
-            D("icon.health", "health"),
-            D("icon.pyre", "pyre health"),
-            D("icon.capacity", "capacity"),
-            D("icon.dragons_hoard", "Dragon's Hoard"),
-            D("icon.forge", "forge points"),
-            D("icon.x_cost", "X cost"),
-            D("icon.deployment_ember", "deployment ember"),
-            D("icon.ability", "ability"),
-            D("icon.charged_echo", "charged echo"),
-            D("icon.charged_echo_slot", "charged echo slot"),
-            // The pad buttons a tutorial draws as icons ("Press [D-pad Down] now"); the keys read by the
-            // game's own names for them.
-            D("icon.dpad_up", "D-pad Up"),
-            D("icon.dpad_down", "D-pad Down"),
-            D("icon.dpad_left", "D-pad Left"),
-            D("icon.dpad_right", "D-pad Right"),
-            D("icon.pad_a", "A"),
-            D("icon.pad_cross", "Cross"),
-            // A card's numbers, which its face shows beside icons; {0} = the number as drawn.
-            D("card.cost", "cost {0}"),
-            D("card.attack", "{0} attack"),
-            D("card.health", "{0} health"),
-            D("card.size", "size {0}"),
-            // What an upgrade adds to a card's text, which the game draws in its upgrade colour; {0} = that
-            // text ("new: Ability: Savior.").
-            D("card.upgraded", "new: {0}"),
-            // The soul attached to a card in a Soul Savior run ({0} = its name).
-            D("card.soul_attached", "{0} attached"),
-            // The Logbook. An enemy's numbers beside their icons ({0} = the number), its variant buttons
-            // (drawn as bare numbers), its artist credit ({0} = the name).
-            D("enemy.variant", "Variant {0}"),
-            D("enemy.attack", "{0} attack"),
-            D("enemy.heal", "{0} healing"),
-            D("enemy.health", "{0} health"),
-            D("enemy.armor", "{0} armor"),
-            D("enemy.artist", "Artist: {0}"),
-            // A search field's clear button, an icon.
-            D("search.clear", "Clear search"),
-            // A champion upgrade path's level nodes, drawn as numerals; {0} = the level.
-            D("upgrade.level", "Upgrade level {0}"),
-            // A mastery card frame, which the game shows as a picture; {0} = its kind below.
-            D("frame.name", "{0} frame"),
-            D("frame.default", "Default"),
-            D("frame.metallic", "Metallic"),
-            D("frame.heaven_throne", "Heaven's Throne"),
-            D("frame.prismatic", "Prismatic"),
-            // A champion whose portrait the game rings with the mastery frame.
-            D("state.mastered", "mastered"),
-            // A pyre heart's two stats, which the game shows as icons with numbers; {0} = the number.
-            D("pyre.attack", "Pyre attack {0}"),
-            D("pyre.health", "Pyre health {0}"),
 
-            // The run's map. Said before a stop on arriving where the route forks ("choice, Light Forge"):
-            // the branches after a battle, a ring's nodes, a fork the route preview reaches.
-            D("map.choice", "choice"),
-            // The route preview (Ctrl+arrows on the map) at its ends.
-            D("map.no_forward", "No forward map node."),
-            D("map.no_backward", "No previous map node."),
-            // A map node already visited, in the ring the train is in.
-            D("state.visited", "visited"),
-            // Soul Savior's region choice: a region already cleared, and a reward a cleared region has
-            // improved (the game draws both only as images).
-            D("state.defeated", "defeated"),
-            // The game's Bind Keys waiting for the key to bind, which it shows nowhere.
-            D("keys.press", "Press a key."),
-            D("state.upgraded", "upgraded"),
-            // The Dragon's Hoard's loot levels, which the game shows as numbers; {0} = the level. "current"
-            // marks the level the hoard is at, which the game shows only by a highlight.
-            D("hoard.level", "Level {0}"),
-            // An amount of a currency, as a reward's short form: {0} = the amount, {1} = the game's word
-            // for the currency ("75 Coins").
-            D("reward.amount", "{0} {1}"),
             D("state.current", "current"),
-            // The run's HUD, which Tab opens as a list anywhere in a run, and its groups the game
-            // draws without a heading.
-            D("hud.title", "Run info"),
-            D("hud.train_stats", "Train stats"),
-            D("hud.artifacts", "Artifacts"),
-            D("hud.enemy_artifacts", "Enemy artifacts"),
-            D("bind.map.forward", "Preview next stop"),
-            D("bind.map.back", "Preview previous stop"),
-            D("bind.map.prev", "Previous route choice"),
-            D("bind.map.next", "Next route choice"),
-            D("bind.run.hud", "Run info"),
 
             D("screen.mod_menu", "Pixel Heroes Access"),
             D("mod.settings", "Settings"),
@@ -211,16 +119,14 @@ namespace PixelHeroesAccess.Core.Strings
             D("mod.close", "Close"),
             D("mod.speak_positions", "Speak list positions"),
             D("mod.focus_on_launch", "Keyboard navigation on at launch"),
-            D("mod.mark_upgrades", "Mark upgraded card text"),
-            D("mod.places_by_neighbours", "Name unit places by their neighbours"),
             // The mod sounds (the mod menu's Sounds): the master volume, then a volume row per cue.
             D("mod.sounds", "Sounds"),
             D("sound.master", "Master volume"),
             // A volume as spoken; {0} = the percent.
             D("sound.percent", "{0} percent"),
             // Volume row labels: what the mod plays each cue for (keyed "sound." + the cue's file name).
-            D("sound.team_friendly", "onto your units along a floor"),
-            D("sound.team_enemy", "onto enemy units along a floor"),
+            D("sound.turn_start", "the heroes' turn begins"),
+            D("sound.hero_fallen", "a hero falls"),
             // {0} = the key category, one of the three names below.
             D("mod.key_category", "{0} keys"),
             // The key categories of the "All keys" list: live everywhere, on the focused screen, in a run,
@@ -230,9 +136,6 @@ namespace PixelHeroesAccess.Core.Strings
             D("mod.category.battle", "Battle"),
             D("mod.category.map", "Map"),
             D("mod.category.run", "Run"),
-            // Rebinding the mod's keys and buttons, from the key list. A key that is the game's own
-            // ({0} = the game's name for its key screen, "Bind Keys").
-            D("keys.game", "set in {0}"),
             D("keys.add_key", "Add key"),
             D("keys.add_button", "Add button"),
             // An action's reset; read "Reset to default: Ctrl+M" with its default keys.
@@ -271,196 +174,15 @@ namespace PixelHeroesAccess.Core.Strings
             D("help.none", "no keys here"),
             // {0} = what the key does, {1} = the keys bound to it.
             D("help.row", "{0}: {1}"),
-            // A jump key's row, by what it lands on here; {0} = that stop's name ("offers", "party").
-            D("help.jump_to", "Jump to {0}"),
 
-            // Battle events, spoken as they happen (queued) and kept in the events buffer, newest first.
-            D("event.deployment", "Deployment."),
-            // {0} = the turn.
-            D("event.turn", "Turn {0}."),
-            // {0} = the turn, {1} = the battle's turns.
-            D("event.turn_of", "Turn {0}/{1}."),
-            D("event.player_action", "Player action."),
-            D("event.room_combat", "Combat."),
-            D("event.enemy_turn", "Enemy turn."),
-            D("event.combat_ended", "Combat ended."),
-            D("event.enemies_cleared", "Enemies cleared."),
-            D("event.deck_shuffled", "Deck shuffled."),
-            // {0} = the ember the player has now.
-            D("event.ember", "Ember {0}."),
-            // {0} = the forge points the player has now.
-            D("event.forge_points", "Forge {0}."),
-            // {0} = the game's word for the currency ("Coin"), {1} = the amount gained / lost.
-            D("event.gold_gained", "{0} +{1}."),
-            D("event.gold_lost", "{0} -{1}."),
-            // {0} = the health the pyre lost / gained.
-            D("event.pyre_damaged", "Pyre -{0} health."),
-            D("event.pyre_healed", "Pyre +{0} health."),
-            // {0} = the pyre's armor now.
-            D("event.pyre_armor", "Pyre armor {0}."),
-            // {0} = the unit, {1} = its floor's number.
-            D("event.spawned", "{0} spawned, floor {1}."),
-            D("event.moved", "{0} moved to floor {1}."),
-            // {0} = the unit.
-            D("event.died", "{0} died."),
-            // {0} = the unit, {1} = the amount.
-            D("event.damaged", "{0} took {1} damage."),
-            D("event.damaged_one", "{0} took damage."),
-            D("event.healed", "{0} healed {1}."),
-            D("event.healed_one", "{0} healed."),
-            // {0} = the unit, {1} = the status, {2} = the change in stacks.
-            D("event.status_increased", "{0} {1} +{2}."),
-            D("event.status_decreased", "{0} {1} -{2}."),
-            // {0} = the unit.
-            D("event.ability_ready", "{0} ability ready."),
-            D("event.ability_unavailable", "{0} ability unavailable."),
-            // {0} = the artifact.
-            D("event.relic_triggered", "{0} triggered."),
-            // A unit's quote: {0} = the unit, {1} = why it spoke, {2} = the quote.
-            D("event.chatter_reason", "{0} {1}, \"{2}\""),
-            // {0} = the unit, {1} = the quote.
-            D("event.chatter", "{0} \"{1}\""),
-            D("event.chatter.summoned", "summoned"),
-            D("event.chatter.attacking", "attacking"),
-            D("event.chatter.slay", "slay"),
-            D("event.chatter.idle", "idle"),
 
-            // A run's end: a battle of the run by its place ({0} = 1 for the first), a clan's level ({0}).
-            D("gameover.battle", "Battle {0}"),
-            D("gameover.level", "level {0}"),
 
-            // A community challenge: {0} = who made it; {0} = how many have played it; a run of it under way.
-            D("challenge.creator", "by {0}"),
-            D("challenge.entries", "{0} entries"),
-            D("challenge.in_progress", "run in progress"),
 
-            // A run's marks, drawn as icons (a leaderboard entry, the run history): won; no restarts or undos.
-            D("run.victory", "Victory"),
-            D("run.clean", "clean run"),
-            // A run the player has starred in the run history; the star just taken off one.
-            D("run.favorite", "favorited"),
-            D("run.unfavorite", "unfavorited"),
 
             // A shop's good or service the player's coin does not cover.
             D("shop.unaffordable", "can't afford"),
 
-            // The battle. A unit: {0} = its size / attack.
-            D("battle.size", "size {0}"),
-            D("battle.attack", "{0} attack"),
-            // {0} = health now, {1} = its maximum.
-            D("battle.hp", "{0} of {1} health"),
-            // {0} = armor, {1} = health now, {2} = its maximum.
-            D("battle.armor_hp", "{0} armor, {1} of {2} health"),
-            // A unit's ability and where it stands: {0} = the ability, {1} = its state.
-            D("battle.ability", "{0}, {1}"),
-            D("battle.ability.ready", "ready"),
-            // {0} = turns of cooldown left.
-            D("battle.ability.cooldown", "{0} turns"),
-            D("battle.ability.deployment", "deployment phase"),
-            D("battle.ability.hand_full", "hand full"),
-            D("battle.ability.disabled", "disabled"),
-            D("battle.ability.unavailable", "unavailable"),
-            // A boss's next action: {0} = the floor it targets / moves to.
-            D("battle.boss_targets", "targets floor {0}"),
-            D("battle.boss_moves", "moves to floor {0}"),
-            // A floor: {0} = its number (1 at the bottom).
-            D("battle.floor", "Floor {0}"),
-            // Its room for the player's units: {0} = space free, {1} = the floor's capacity.
-            D("battle.capacity", "{0}/{1}"),
-            // {0} = the capacity line, {1} = echoes, {2} = the most it holds.
-            D("battle.capacity_echo", "{0}, {1}/{2}"),
-            // Shift+B, one floor of the list: {0} = the floor, {1} = its capacity line.
-            D("battle.floor_capacity", "{0} {1}"),
-            D("battle.floor_empty", "No creatures"),
-            D("battle.hand", "Hand"),
-            D("battle.hand_empty", "No cards"),
-            D("battle.top_panel", "Top panel"),
-            // Targeting: a card that takes the whole floor; a place for a unit ({0} = 1 at the front).
-            D("battle.selected_floor", "Selected floor"),
-            D("battle.spawn_point", "Spawn point {0}"),
-            // A place for a new unit by the units around it, by name: at the front ({0} = the unit it goes
-            // before), at the back ({0} = the unit it goes after), between two ({0}, {1}, front first), the
-            // only place on a floor with none of the player's units.
-            D("battle.place_before", "Before {0}"),
-            D("battle.place_after", "After {0}"),
-            D("battle.place_between", "Between {0}, {1}"),
-            D("battle.place_alone", "No friendly units"),
-            // What the coming combat does to a unit (I, Ctrl+I, Ctrl+Shift+I).
-            D("battle.outcome.eaten", "eaten"),
-            D("battle.outcome.burns_out", "burns out"),
-            D("battle.outcome.dies", "dies"),
-            D("battle.outcome.despawns", "despawns"),
-            // {0} = health / armor after the combat.
-            D("battle.outcome.health", "{0} health"),
-            D("battle.outcome.armor", "{0} armor"),
-            D("battle.outcome.no_change", "no change"),
-            D("battle.outcome.no_changes", "no changes"),
-            // Ctrl+I: {0} = the unit, {1} = its outcome. Ctrl+Shift+I: {0} = the floor, {1} = its outcomes.
-            D("battle.outcome.unit", "{0}, {1}"),
-            D("battle.outcome.floor", "{0}: {1}"),
-            // The read keys: {0} = ember / forge points; the pyre's health and its maximum.
-            D("battle.read.ember", "{0} ember"),
-            D("battle.read.forge_points", "{0} forge points"),
-            D("battle.read.pyre", "{0}/{1} hp"),
-            // {0} = the amount, {1} = the game's word for the currency.
-            D("battle.read.gold", "{0} {1}"),
-            // The keys' names in the key help.
-            D("bind.battle.ember", "Read ember"),
-            D("bind.battle.forge_points", "Read forge points"),
-            D("bind.run.gold", "Read coin"),
-            D("bind.run.pyre", "Read pyre health"),
-            D("bind.battle.moon", "Read moon phase"),
-            D("bind.battle.outcome", "Read unit outcome"),
-            D("bind.battle.floor_outcomes", "Read floor outcomes"),
-            D("bind.battle.all_outcomes", "Read all floor outcomes"),
-            D("bind.battle.capacity", "Read floor capacity and charged echoes"),
-            D("bind.battle.all_capacity", "Read all floor capacity and charged echoes"),
-            D("bind.battle.hand", "Jump to hand"),
-            D("bind.battle.top", "Jump to top panel"),
-            // A numbered key's name ({0} = the number): Shift and the game's key for the hand's nth card,
-            // Ctrl and a floor's number.
-            D("bind.battle.card", "Read card {0}"),
-            D("bind.battle.floor", "Go to floor {0}"),
 
-            // The event settings (mod menu): the list, its toggles, and each kind's name.
-            D("event_settings", "Event announcements"),
-            D("event_settings.announce", "Announce"),
-            D("event_settings.buffer", "Add to buffer"),
-            D("event_settings.friendly", "Friendly units"),
-            D("event_settings.enemy", "Enemy units"),
-            D("event_kind.combat.phase", "Combat phases"),
-            D("event_kind.combat.turn", "Combat turn"),
-            D("event_kind.combat.moon_phase", "Moon phase changes"),
-            D("event_kind.card.deck_shuffled", "Deck shuffled"),
-            D("event_kind.resource.energy", "Ember changes"),
-            D("event_kind.resource.gold", "Coin changes"),
-            D("event_kind.resource.forge_points", "Forge point changes"),
-            D("event_kind.pyre.hp", "Pyre health changes"),
-            D("event_kind.pyre.armor", "Pyre armor"),
-            D("event_kind.relic.triggered", "Artifact triggered"),
-            D("event_kind.character.spawned", "Unit spawned"),
-            D("event_kind.character.moved", "Unit movement"),
-            D("event_kind.character.died", "Unit death"),
-            D("event_kind.character.damage", "Unit damage"),
-            D("event_kind.character.hp", "Unit health changes"),
-            D("event_kind.character.status", "Unit status changes"),
-            D("event_kind.character.ability", "Unit ability availability"),
-            D("event_kind.character.chatter.summoned", "Unit summoned chatter"),
-            D("event_kind.character.chatter.attacking", "Unit attacking chatter"),
-            D("event_kind.character.chatter.slay", "Unit slay chatter"),
-            D("event_kind.character.chatter.idle", "Unit idle chatter"),
-            D("event_kind.character.chatter.trigger", "Unit trigger chatter"),
-            D("event_kind.merchant.chatter", "Merchant chatter"),
-            D("event_kind.basic", "Basic events"),
-            // The groups Event announcements lists its kinds under.
-            D("event_group.combat", "Combat"),
-            D("event_group.units", "Units"),
-            D("event_group.resources", "Resources"),
-            D("event_group.chatter", "Chatter"),
-            D("event_group.other", "Other"),
-            // Artifact triggered's list of relics: the run's own, and what trials do to the enemies.
-            D("relics.this_run", "This run"),
-            D("relics.trials", "Trials"),
 
             // ---- Pixel Heroes ----
             // Caption-less buttons, read by their icon (Module/UI/IconLabels).
@@ -812,8 +534,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string NoTooltip => Get("nav.no_tooltip");
         public static string NoDetails => Get("nav.no_details");
         public static string BufferUi => Get("buffer.ui");
-        public static string BufferEvents => Get("buffer.events");
-        public static string BufferQuotes => Get("buffer.quotes");
         public static string BufferNone => Get("buffer.none");
         public static string BufferLine(string name, string line) => F("buffer.line", name, line);
         public static string NoDragTarget => Get("drag.no_target");
@@ -837,45 +557,13 @@ namespace PixelHeroesAccess.Core.Strings
         }
 
         public static string RoleDialog => Get("role.dialog");
-        public static string PauseDiscord => Get("pause.discord");
         public static string StateCompleted => Get("state.completed");
-        public static string EnemyVariant(string number) => F("enemy.variant", number);
-        public static string EnemyAttack(string value) => F("enemy.attack", value);
-        public static string EnemyHeal(string value) => F("enemy.heal", value);
-        public static string EnemyHealth(string value) => F("enemy.health", value);
-        public static string EnemyArmor(string value) => F("enemy.armor", value);
-        public static string EnemyArtist(string name) => F("enemy.artist", name);
-        public static string SearchClear => Get("search.clear");
-        public static string UpgradeLevel(int level) => F("upgrade.level", level);
-        public static string FrameName(string kind) => F("frame.name", kind);
         public static string Frame(string key) => Get("frame." + key);
-        public static string StateMastered => Get("state.mastered");
 
         public static string Icon(string key) => Has("icon." + key) ? Get("icon." + key) : null;
-        public static string CardCost(string value) => F("card.cost", value);
-        public static string CardAttack(string value) => F("card.attack", value);
-        public static string CardHealth(string value) => F("card.health", value);
-        public static string CardSize(string value) => F("card.size", value);
-        public static string CardUpgraded(string text) => F("card.upgraded", text);
-        public static string CardSoulAttached(string soul) => F("card.soul_attached", soul);
 
-        public static string PyreAttack(string value) => F("pyre.attack", value);
-        public static string PyreHealth(string value) => F("pyre.health", value);
 
-        public static string MapChoice => Get("map.choice");
-        public static string MapNoForward => Get("map.no_forward");
-        public static string MapNoBackward => Get("map.no_backward");
-        public static string StateVisited => Get("state.visited");
-        public static string StateDefeated => Get("state.defeated");
-        public static string KeysPress => Get("keys.press");
-        public static string StateUpgraded => Get("state.upgraded");
-        public static string HoardLevel(int level) => F("hoard.level", level);
-        public static string RewardAmount(string amount, string currency) => F("reward.amount", amount, currency);
         public static string StateCurrent => Get("state.current");
-        public static string HudTitle => Get("hud.title");
-        public static string HudTrainStats => Get("hud.train_stats");
-        public static string HudArtifacts => Get("hud.artifacts");
-        public static string HudEnemyArtifacts => Get("hud.enemy_artifacts");
 
         public static string ScreenModMenu => Get("screen.mod_menu");
         public static string ModSettings => Get("mod.settings");
@@ -883,8 +571,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ModClose => Get("mod.close");
         public static string ModSpeakPositions => Get("mod.speak_positions");
         public static string ModFocusOnLaunch => Get("mod.focus_on_launch");
-        public static string ModMarkUpgrades => Get("mod.mark_upgrades");
-        public static string ModPlacesByNeighbours => Get("mod.places_by_neighbours");
         public static string ModSounds => Get("mod.sounds");
         public static string SoundMaster => Get("sound.master");
         public static string SoundPercent(int percent) => F("sound.percent", percent);
@@ -899,7 +585,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ScreenHelp => Get("screen.help");
         public static string HelpNone => Get("help.none");
         public static string HelpRow(string label, string keys) => F("help.row", label, keys);
-        public static string KeysGame(string screen) => F("keys.game", screen);
         public static string KeysAddKey => Get("keys.add_key");
         public static string KeysAddButton => Get("keys.add_button");
         public static string KeysReset => Get("keys.reset");
@@ -921,20 +606,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string RebindKey(string action) => F("rebind.key", action);
         public static string RebindButton(string action) => F("rebind.button", action);
         public static string RebindConflict(string key, string other) => F("rebind.conflict", key, other);
-        public static string JumpTo(string stop) => F("help.jump_to", stop);
 
-        /// <summary>A battle event's line: "event.&lt;key&gt;" filled in ("Turn {0}.").</summary>
-        public static string Event(string key, params object[] args) => F("event." + key, args);
-        /// <summary>A battle line: "battle.&lt;key&gt;" filled in ("Floor {0}").</summary>
-        public static string Battle(string key, params object[] args) => F("battle." + key, args);
-        public static string EventSettings => Get("event_settings");
-        public static string EventAnnounce => Get("event_settings.announce");
-        public static string EventBuffer => Get("event_settings.buffer");
-        public static string EventFriendly => Get("event_settings.friendly");
-        public static string EventEnemy => Get("event_settings.enemy");
         public static string EventGroup(string group) => Get("event_group." + (group ?? "").ToLowerInvariant());
-        public static string RelicsThisRun => Get("relics.this_run");
-        public static string RelicsTrials => Get("relics.trials");
 
         // ---- Pixel Heroes ----
         public static string ButtonBack => Get("button.back");

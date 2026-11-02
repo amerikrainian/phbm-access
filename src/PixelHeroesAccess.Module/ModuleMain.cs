@@ -70,7 +70,6 @@ namespace PixelHeroesAccess.Module
             InputManager.TextFieldFocused = () => TextEntry.OwnsKeyboard;
             GraphAnnouncer.PositionText = (i, n) => host.Settings.SpeakPositions ? Strings.Position(i, n) : null;
             GraphAnnouncer.ExpandedStateText = Strings.ExpandedState;
-            Core.Events.GameEvents.Store = () => host.Settings.Store;
             InputBinding.RegisterType("keyboard", KeyboardBinding.Deserialize);
             InputBinding.RegisterType("controller", ControllerBinding.Deserialize);
 
@@ -270,7 +269,6 @@ namespace PixelHeroesAccess.Module
             Safe(Gamepad.Poll, "gamepad");
             Safe(TextEntry.Tick, "text entry");
             InputManager.Tick();
-            Safe(Core.Events.GameEvents.Flush, "events");
             ScreenManager.Tick();
             if (!TextEntry.OwnsKeyboard) Navigation.TickTypeahead();
             Safe(Later.Tick, "later");

@@ -107,6 +107,17 @@ namespace PixelHeroesAccess.Module.Battle
             }
         }
 
+        // A hero falling: its cue (the log has said who and how).
+        [HarmonyPatch(typeof(DeathAnimation), nameof(DeathAnimation.StartNewAnimation))]
+        private static class Death
+        {
+            private static void Postfix(Character __0)
+            {
+                try { if (__0 != null && __0.IsHero()) ModuleMain.Cues?.Play(Core.Audio.AudioCue.HeroFallen); }
+                catch (Exception e) { CoreLog.Warning("BattleEvents: death cue failed: " + e); }
+            }
+        }
+
         private static string ItemSigned(int value) => value > 0 ? "+" + value : value.ToString();
 
         // The log's lines as one utterance: each cleaned, a target's arrow dropped, its KILL mark last.
