@@ -19,9 +19,16 @@ namespace PixelHeroesAccess.Module.UI
             { "Arena_BackButton", "button.back" },
         };
 
-        private static readonly Dictionary<string, string> ByObject = new Dictionary<string, string>
+        // Keywords of the game's object names for its icon buttons ("Button 02 LeaveTown",
+        // "Button QuestLog"), first match wins.
+        private static readonly KeyValuePair<string, string>[] ByKeyword =
         {
-            { "Button Back", "button.back" },
+            new KeyValuePair<string, string>("QuestLog", "button.quest_log"),
+            new KeyValuePair<string, string>("LeaveTown", "button.leave_town"),
+            new KeyValuePair<string, string>("Inventory", "button.inventory"),
+            new KeyValuePair<string, string>("Pause", "button.pause"),
+            new KeyValuePair<string, string>("Help", "button.help"),
+            new KeyValuePair<string, string>("Back", "button.back"),
         };
 
         private static readonly HashSet<string> _logged = new HashSet<string>();
@@ -33,7 +40,8 @@ namespace PixelHeroesAccess.Module.UI
             string spriteName = sprite != null && sprite.CurrentSprite != null ? sprite.CurrentSprite.name : null;
             if (spriteName != null && BySprite.TryGetValue(spriteName, out var key)) return Strings.Get(key);
             string name = widget.gameObject.name;
-            if (ByObject.TryGetValue(name, out key)) return Strings.Get(key);
+            foreach (var kv in ByKeyword)
+                if (name.IndexOf(kv.Key, System.StringComparison.OrdinalIgnoreCase) >= 0) return Strings.Get(kv.Value);
             if (_logged.Add(name + "|" + spriteName))
                 CoreLog.Info("IconLabels: unnamed button '" + name + "' sprite '" + spriteName + "'");
             string cleaned = name.StartsWith("Button ") ? name.Substring("Button ".Length) : name;

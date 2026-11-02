@@ -465,6 +465,84 @@ namespace PixelHeroesAccess.Core.Strings
             // ---- Pixel Heroes ----
             // Caption-less buttons, read by their icon (Module/UI/IconLabels).
             D("button.back", "Back"),
+            // A game label and its value: "Range 1-2", "Level 3", "Healing 20". {0} = the game's word, {1} = the value.
+            D("item.pair", "{0} {1}"),
+            // An attack's output: {0} = the game's damage type (Physical, Magical), {1} = the amount, {2} = its element (Phoenix, Neutral).
+            D("item.damage", "{0} damage {1}, {2}"),
+            // A skill still cooling down; {0} = action turns left.
+            D("item.cooling_down", "{0} turns to wait"),
+            // A weapon's damage formula: {0} = "10 + Power 50%".
+            D("item.formula", "formula {0}"),
+            // How many of a potion the party carries.
+            D("item.potion_count", "count {0}"),
+            // Item kinds, the first detail line of an item.
+            D("item.kind.weapon", "weapon"),
+            D("item.kind.spell", "spell"),
+            D("item.kind.prayer", "prayer"),
+            D("item.kind.unique", "unique item"),
+            D("item.kind.skill", "skill"),
+            D("item.kind.body", "body armor"),
+            D("item.kind.head", "head armor"),
+            D("item.kind.trinket", "trinket"),
+            D("item.kind.potion", "potion"),
+            // The two defenses, which the game names only by abbreviation (DefPhy, DefMag).
+            D("value.def_phy", "Physical defense"),
+            D("value.def_mag", "Magical defense"),
+            // A hero's health: {0} = current, {1} = maximum.
+            D("hero.hp", "HP {0} of {1}"),
+            // A fallen hero's health line.
+            D("hero.dead", "dead"),
+            // {0} = total experience, {1} = the total the next level needs.
+            D("hero.xp", "experience {0}, next level at {1}"),
+            // At the level cap; {1} = the game's "Maximum Level".
+            D("hero.xp_max", "experience {0}, {1}"),
+            // Unspent level-up points.
+            D("hero.points", "{0} attribute points to spend"),
+            // What one level-up point adds to each attribute; {0} = "Life 3, Strength 2, ...".
+            D("hero.per_point", "per point: {0}"),
+            // A status on a character: {0} = its name, {1} = turns left.
+            D("status.turns", "{0} {1} turns"),
+            // An equipment slot and what it holds: {0} = the slot, {1} = the item or empty.
+            D("slot.line", "{0}: {1}"),
+            // Equipment slots.
+            D("slot.hand_left", "left hand"),
+            D("slot.hand_right", "right hand"),
+            D("slot.body", "body"),
+            D("slot.head", "head"),
+            D("slot.trinket", "trinket"),
+            // A hero's skill by its number.
+            D("slot.skill", "skill {0}"),
+            // An empty equipment slot.
+            D("slot.empty", "empty"),
+            // Buffer names (Ctrl+Left/Right).
+            D("buffer.hero", "hero"),
+            D("buffer.items", "items"),
+            D("button.help", "Help"),
+            D("button.pause", "Pause"),
+            D("button.quest_log", "Quest log"),
+            D("button.inventory", "Inventory"),
+            // The tavern's stops: the heroes for hire, the party being hired.
+            D("tavern.candidates", "heroes"),
+            D("tavern.party", "party"),
+            // A tavern candidate already in the party.
+            D("tavern.hired", "hired"),
+            // A party slot: {0} = its number, {1} = the hero or empty.
+            D("party.slot", "party {0}: {1}"),
+            // The party's gold.
+            D("gold", "gold {0}"),
+            // The town's list of places (buildings, shops, people).
+            D("town.places", "town"),
+            // A townsperson's quest standing; {0} = the quest's name.
+            D("npc.offers_quest", "offers a quest: {0}"),
+            D("npc.quest_active", "quest in progress: {0}"),
+            D("npc.quest_done", "quest complete"),
+            // The quest the party is on, or none.
+            D("quest.none", "no quest"),
+            // {0} = the quest's name, {1} = its dungeon.
+            D("quest.current", "quest: {0}, {1}"),
+            D("button.leave_town", "Leave town"),
+            // A price.
+            D("cost", "{0} gold"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -748,5 +826,55 @@ namespace PixelHeroesAccess.Core.Strings
 
         // ---- Pixel Heroes ----
         public static string ButtonBack => Get("button.back");
+        public static string ItemPair(string label, string value) => F("item.pair", label, value);
+        public static string ItemDamage(string type, string value, string element) => F("item.damage", type, value, element);
+        public static string ItemCoolingDown(string turns) => F("item.cooling_down", turns);
+        public static string ItemFormula(string formula) => F("item.formula", formula);
+        public static string ItemPotionCount(string count) => F("item.potion_count", count);
+        public static string ItemKindWeapon => Get("item.kind.weapon");
+        public static string ItemKindSpell => Get("item.kind.spell");
+        public static string ItemKindPrayer => Get("item.kind.prayer");
+        public static string ItemKindUnique => Get("item.kind.unique");
+        public static string ItemKindSkill => Get("item.kind.skill");
+        public static string ItemKindBody => Get("item.kind.body");
+        public static string ItemKindHead => Get("item.kind.head");
+        public static string ItemKindTrinket => Get("item.kind.trinket");
+        public static string ItemKindPotion => Get("item.kind.potion");
+        public static string ValueDefPhy => Get("value.def_phy");
+        public static string ValueDefMag => Get("value.def_mag");
+        public static string HeroHp(string current, string max) => F("hero.hp", current, max);
+        public static string HeroDead => Get("hero.dead");
+        public static string HeroXp(string xp, string next) => F("hero.xp", xp, next);
+        public static string HeroXpMax(string xp, string max) => F("hero.xp_max", xp, max);
+        public static string HeroPoints(string count) => F("hero.points", count);
+        public static string HeroPerPoint(string list) => F("hero.per_point", list);
+        public static string StatusTurns(string name, string turns) => F("status.turns", name, turns);
+        public static string SlotLine(string slot, string item) => F("slot.line", slot, item);
+        public static string SlotHandLeft => Get("slot.hand_left");
+        public static string SlotHandRight => Get("slot.hand_right");
+        public static string SlotBody => Get("slot.body");
+        public static string SlotHead => Get("slot.head");
+        public static string SlotTrinket => Get("slot.trinket");
+        public static string SlotSkill(string number) => F("slot.skill", number);
+        public static string SlotEmpty => Get("slot.empty");
+        public static string BufferHero => Get("buffer.hero");
+        public static string BufferItems => Get("buffer.items");
+        public static string ButtonHelp => Get("button.help");
+        public static string ButtonPause => Get("button.pause");
+        public static string ButtonQuestLog => Get("button.quest_log");
+        public static string ButtonInventory => Get("button.inventory");
+        public static string TavernCandidates => Get("tavern.candidates");
+        public static string TavernParty => Get("tavern.party");
+        public static string TavernHired => Get("tavern.hired");
+        public static string PartySlot(string number, string hero) => F("party.slot", number, hero);
+        public static string Gold(string amount) => F("gold", amount);
+        public static string TownPlaces => Get("town.places");
+        public static string NpcOffersQuest(string quest) => F("npc.offers_quest", quest);
+        public static string NpcQuestActive(string quest) => F("npc.quest_active", quest);
+        public static string NpcQuestDone => Get("npc.quest_done");
+        public static string QuestNone => Get("quest.none");
+        public static string QuestCurrent(string quest, string dungeon) => F("quest.current", quest, dungeon);
+        public static string ButtonLeaveTown => Get("button.leave_town");
+        public static string Cost(string amount) => F("cost", amount);
     }
 }

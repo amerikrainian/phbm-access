@@ -208,6 +208,10 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.GenericScreen());
             ScreenManager.Register(new Screens.PauseScreen());
             ScreenManager.Register(new Screens.CampaignSelectScreen());
+            ScreenManager.Register(new Screens.TavernScreen());
+            ScreenManager.Register(new Screens.TavernHeroCardScreen());
+            ScreenManager.Register(new Screens.TalkScreen());
+            ScreenManager.Register(new Screens.TownScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }

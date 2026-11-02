@@ -45,6 +45,8 @@ namespace PixelHeroesAccess.Module.Interop
             bool space = false;
             foreach (char c in raw)
             {
+                // The paragraph sign marks where the game may break a long line; the mesh drops it.
+                if (c == '§') continue;
                 if (c == '|' || c == '~' || c == '\n' || c == '\r' || c == ' ' || c == '\t')
                 {
                     space = true;

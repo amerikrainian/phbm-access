@@ -20,6 +20,9 @@ namespace PixelHeroesAccess.Module.Screens
         /// <summary>The live game screen, or null when another scene is up or a transition runs.</summary>
         protected static T Game => GameScreens.Current<T>();
 
+        // A popup over the scene pops this screen; focus comes back where it was when the popup goes.
+        public override bool KeepStateOnPop => true;
+
         public override bool IsActive()
         {
             var game = Game;

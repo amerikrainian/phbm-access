@@ -52,6 +52,7 @@ namespace PixelHeroesAccess.Module.Screens
             var top = GameScreens.TopPopup();
             if (top != null && !top.IsActiveAndNotMoving()) return;
             var buttons = GameScreens.LiveButtons(root);
+            buttons.RemoveAll(GameScreens.IsFigure);
             bool isPopup = Popup.GetTopMostActivePopup() == root;
             var items = new List<Component>(buttons);
             if (isPopup) items.AddRange(LooseTexts(root));

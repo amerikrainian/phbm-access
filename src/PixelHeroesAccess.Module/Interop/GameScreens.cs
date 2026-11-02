@@ -69,6 +69,17 @@ namespace PixelHeroesAccess.Module.Interop
             return list;
         }
 
+        /// <summary>A click target on a figure or the scenery rather than a control: a hero's or an
+        /// enemy's selector, an NPC, the tavern's barkeeper and band, the town's walking area. Screens
+        /// reach those through their own data; the fallback leaves them out.</summary>
+        public static bool IsFigure(tk2dButton button)
+        {
+            if (button == null) return true;
+            if (button.GetComponentInParent<Character>() != null || button.GetComponentInParent<NPC>() != null) return true;
+            string n = button.gameObject.name;
+            return n == "BandSelector" || n == "Barkeeper" || n.Contains("Sky") || n.StartsWith("Button CtrlInp") || n.StartsWith("Blackness_");
+        }
+
         /// <summary>Top to bottom (rows within a few units count as one), then left to right.</summary>
         public static int ReadingOrder(Component a, Component b)
         {
