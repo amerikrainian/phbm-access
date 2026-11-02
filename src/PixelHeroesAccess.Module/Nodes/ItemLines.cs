@@ -43,10 +43,18 @@ namespace PixelHeroesAccess.Module.Nodes
             var parts = new List<string> { Name(item) };
             try
             {
+                // A potion's name carries its count ("Small Healing Potion x 2").
                 if (item.pItemActive != null) parts.Add(Output(item.pItemActive, hero));
                 else if (item.pItemPassive != null && item.pItemPassive.GetItemPassiveType() != eItemPassiveTypes.Trinket)
                     parts.Add(Defenses(item.pItemPassive.GetDefPhy(), item.pItemPassive.GetDefMag()));
-                else if (item.pItemPotion != null) parts.Add(Strings.ItemPotionCount(item.pItemPotion.GetCount().ToString()));
+                else if (item.pItemPassive != null)
+                {
+                    // A trinket's headline is its first bonus (attributes, element defense, immunity).
+                    var lines = new List<string>();
+                    Passive(item.pItemPassive, lines);
+                    lines.RemoveAll(string.IsNullOrWhiteSpace);
+                    if (lines.Count > 2) parts.Add(lines[1]);
+                }
             }
             catch (Exception e) { CoreLog.Warning("ItemLines: summary failed: " + e.Message); }
             return Join(parts);

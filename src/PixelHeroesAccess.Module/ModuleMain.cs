@@ -212,6 +212,7 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.TavernHeroCardScreen());
             ScreenManager.Register(new Screens.TalkScreen());
             ScreenManager.Register(new Screens.TownScreen());
+            ScreenManager.Register(new Screens.ShopScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }

@@ -39,13 +39,16 @@ namespace PixelHeroesAccess.Module.Nodes
         }
 
         /// <summary>An item as a control: its summary as the label (or the label given), its facts in
-        /// the control buffer, its holder's buffers when one is given.</summary>
+        /// the control buffer, its holder's buffers when one is given. Its damage and healing are
+        /// reckoned with <paramref name="reckon"/> (the hero a shop or the inventory has selected for an
+        /// item in the backpack), else with the holder.</summary>
         public static NodeVtable Item(Func<Item> item, Func<CharacterHero> holder, Action activate = null,
-            Func<string> label = null, Func<bool> enabled = null)
+            Func<string> label = null, Func<bool> enabled = null, Func<CharacterHero> reckon = null)
         {
-            Func<string> lbl = label ?? (() => ItemLines.Summary(item(), holder != null ? holder() : null));
+            Func<CharacterHero> calc = reckon ?? holder ?? (() => null);
+            Func<string> lbl = label ?? (() => ItemLines.Summary(item(), calc()));
             var vt = GameNodes.Button(lbl, activate, enabled, activate == null ? ControlTypes.Text : ControlTypes.Button);
-            vt.Details = () => ItemLines.Lines(item(), holder != null ? holder() : null);
+            vt.Details = () => ItemLines.Lines(item(), calc());
             if (holder != null) vt.SideLines = Sides(holder);
             return vt;
         }

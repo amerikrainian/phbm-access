@@ -543,6 +543,23 @@ namespace PixelHeroesAccess.Core.Strings
             D("button.leave_town", "Leave town"),
             // A price.
             D("cost", "{0} gold"),
+            // A list with nothing in it (the shop's stock, the backpack).
+            D("list.empty", "empty"),
+            // Items carried against the backpack's limit.
+            D("backpack.count", "backpack {0} of {1}"),
+            // Carrying more than the backpack holds: the party cannot leave town or enter a room.
+            D("backpack.over", "over the limit"),
+            // A shop offer the party cannot pay for.
+            D("shop.too_expensive", "not enough gold"),
+            // Potions, which shops do not buy.
+            D("shop.not_for_sale", "cannot be sold"),
+            // What an item fetches when sold; {0} = gold.
+            D("shop.sells_for", "sells for {0}"),
+            // Shop results; {0} = the item.
+            D("shop.bought", "bought {0}"),
+            D("shop.sold", "sold {0}"),
+            // A purchase or sale the game did not make.
+            D("shop.refused", "not possible"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -876,5 +893,14 @@ namespace PixelHeroesAccess.Core.Strings
         public static string QuestCurrent(string quest, string dungeon) => F("quest.current", quest, dungeon);
         public static string ButtonLeaveTown => Get("button.leave_town");
         public static string Cost(string amount) => F("cost", amount);
+        public static string ListEmpty => Get("list.empty");
+        public static string BackpackCount(string count, string limit) => F("backpack.count", count, limit);
+        public static string BackpackOver => Get("backpack.over");
+        public static string ShopTooExpensive => Get("shop.too_expensive");
+        public static string ShopNotForSale => Get("shop.not_for_sale");
+        public static string ShopSellsFor(string amount) => F("shop.sells_for", amount);
+        public static string ShopBought(string item) => F("shop.bought", item);
+        public static string ShopSold(string item) => F("shop.sold", item);
+        public static string ShopRefused => Get("shop.refused");
     }
 }
