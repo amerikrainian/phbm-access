@@ -219,6 +219,7 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.GameHelpScreen());
             ScreenManager.Register(new Screens.QuestLogScreen());
             ScreenManager.Register(new Screens.TempleScreen());
+            ScreenManager.Register(new Screens.LibraryScreen());
             ScreenManager.Register(new Screens.GraveyardScreen());
             ScreenManager.Register(new Screens.ProgressScreen());
             ScreenManager.Register(new Screens.CreditsScreen());
