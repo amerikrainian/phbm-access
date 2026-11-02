@@ -331,7 +331,7 @@ namespace PixelHeroesAccess.Core.Strings
             // A fight begins; {0} = the enemies.
             D("battle.begins", "fight: {0}"),
             // The dungeon room the party enters next: {0} = its number, {1} = the rooms in all.
-            D("room.next", "room {0} of {1}, the boss in the last"),
+            D("room.next", "room {0} of {1}"),
             // A hero's chance to open a treasure (the game prints this in English only).
             D("treasure.chance", "{0}% chance"),
             // The help's element relations, which the game draws as a diagram: {0} = an element, {1} = the one it beats, {2} = the one it loses to.
