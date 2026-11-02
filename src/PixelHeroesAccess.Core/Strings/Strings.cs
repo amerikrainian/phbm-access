@@ -560,6 +560,59 @@ namespace PixelHeroesAccess.Core.Strings
             D("shop.sold", "sold {0}"),
             // A purchase or sale the game did not make.
             D("shop.refused", "not possible"),
+            // The fight's stops: the heroes and their actions, the targets of the chosen action, the enemies.
+            D("battle.party", "party"),
+            // {0} = the chosen item or skill.
+            D("battle.targets", "targets for {0}"),
+            D("battle.enemies", "enemies"),
+            // A target of an action that strikes every enemy or the whole party.
+            D("battle.all", "all"),
+            // A hero who acted last turn and must rest this one (the game's rule).
+            D("battle.rested", "rested"),
+            // A status ticking between turns: {0} = the status, {1} = the character, {2} = the HP change ("-4").
+            D("battle.status_damage", "{0}: {1} {2} HP"),
+            // A status running out: {0} = the status, {1} = the character.
+            D("battle.status_ends", "{0} ends on {1}"),
+            // All heroes have fallen.
+            D("battle.defeat", "defeat"),
+            // The battle log buffer.
+            D("buffer.log", "log"),
+            // A reward's parts: experience, gold, what was found.
+            D("loot.experience", "experience +{0}"),
+            D("loot.gold", "gold +{0}"),
+            // {0} = the items and potions, comma separated.
+            D("loot.found", "found: {0}"),
+            // A reward of nothing.
+            D("loot.nothing", "nothing found"),
+            // Leaves the reward screen (the game's skip).
+            D("loot.continue", "Continue"),
+            // The inventory's stop for spending attribute points.
+            D("inventory.level_up", "attributes"),
+            // An attribute to raise: {0} = its name, {1} = its value, {2} = what a point adds.
+            D("inventory.attribute", "{0} {1}, +{2} per point"),
+            // An item equipped: {0} = the item, {1} = the hero, {2} = the slot.
+            D("inventory.equipped", "{0} on {1}, {2}"),
+            // An item taken off.
+            D("inventory.unequipped", "{0} to the backpack"),
+            // An item destroyed.
+            D("inventory.trashed", "{0} thrown away"),
+            // A hero moved in the line: {0} = the hero, {1} = the new place.
+            D("inventory.swapped", "{0} now in place {1}"),
+            // A hero menu's option.
+            D("inventory.swap_with", "swap with {0}, place {1}"),
+            // An equipped hand item's option: {0} = the other hand.
+            D("inventory.move_to", "move to {0}"),
+            // Taking an item off.
+            D("inventory.to_backpack", "put in the backpack"),
+            // Destroying an item (the game's trash).
+            D("inventory.throw_away", "throw away"),
+            // The confirmation's title.
+            D("inventory.throw_away_ask", "throw away {0}?"),
+            // The confirmation's yes.
+            D("inventory.throw_away_confirm", "yes, throw away {0}"),
+            // A backpack armor item's menu row: {0} = the slot it takes.
+            D("inventory.equip_slot", "equip, {0}"),
+            D("button.next_room", "Next room"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -902,5 +955,33 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ShopBought(string item) => F("shop.bought", item);
         public static string ShopSold(string item) => F("shop.sold", item);
         public static string ShopRefused => Get("shop.refused");
+        public static string BattleParty => Get("battle.party");
+        public static string BattleTargets(string item) => F("battle.targets", item);
+        public static string BattleEnemies => Get("battle.enemies");
+        public static string BattleAll => Get("battle.all");
+        public static string BattleRested => Get("battle.rested");
+        public static string BattleStatusDamage(string status, string character, string change) => F("battle.status_damage", status, character, change);
+        public static string BattleStatusEnds(string status, string character) => F("battle.status_ends", status, character);
+        public static string BattleDefeat => Get("battle.defeat");
+        public static string BufferLog => Get("buffer.log");
+        public static string LootExperience(string amount) => F("loot.experience", amount);
+        public static string LootGold(string amount) => F("loot.gold", amount);
+        public static string LootFound(string list) => F("loot.found", list);
+        public static string LootNothing => Get("loot.nothing");
+        public static string LootContinue => Get("loot.continue");
+        public static string InventoryLevelUp => Get("inventory.level_up");
+        public static string InventoryAttribute(string name, string value, string gain) => F("inventory.attribute", name, value, gain);
+        public static string InventoryEquipped(string item, string hero, string slot) => F("inventory.equipped", item, hero, slot);
+        public static string InventoryUnequipped(string item) => F("inventory.unequipped", item);
+        public static string InventoryTrashed(string item) => F("inventory.trashed", item);
+        public static string InventorySwapped(string hero, string place) => F("inventory.swapped", hero, place);
+        public static string InventorySwapWith(string hero, string place) => F("inventory.swap_with", hero, place);
+        public static string InventoryMoveTo(string slot) => F("inventory.move_to", slot);
+        public static string InventoryToBackpack => Get("inventory.to_backpack");
+        public static string InventoryThrowAway => Get("inventory.throw_away");
+        public static string InventoryThrowAwayAsk(string item) => F("inventory.throw_away_ask", item);
+        public static string InventoryThrowAwayConfirm(string item) => F("inventory.throw_away_confirm", item);
+        public static string InventoryEquipSlot(string slot) => F("inventory.equip_slot", slot);
+        public static string ButtonNextRoom => Get("button.next_room");
     }
 }

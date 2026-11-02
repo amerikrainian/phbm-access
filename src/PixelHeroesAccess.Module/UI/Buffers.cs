@@ -55,7 +55,7 @@ namespace PixelHeroesAccess.Module.UI
             _ui.SetSource(() => NodeLines.Lines(Navigation.FocusedNode));
             _hero = Side(HeroKey, () => Strings.BufferHero);
             _items = Side(ItemsKey, () => Strings.BufferItems);
-            Log(BufferKeys.Events, () => Strings.BufferEvents, GameEvents.Events);
+            Log(BufferKeys.Events, () => Strings.BufferLog, GameEvents.Events);
         }
 
         private static void Log(string key, System.Func<string> label, EventLog log)

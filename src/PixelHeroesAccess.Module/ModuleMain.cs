@@ -95,8 +95,13 @@ namespace PixelHeroesAccess.Module
             RegisterScreens();
             // The game hooks (the input drivers, the language). Patched by this load's Harmony id,
             // unpatched in Dispose. A failure here is a broken mod: say so, loudly, in the log.
-            try { _harmony.PatchAll(typeof(ModuleMain).Assembly); }
-            catch (Exception e) { host.LogError("Harmony patching failed: " + e); }
+            // Class by class, so one hook a game update broke loses that hook alone.
+            foreach (var type in typeof(ModuleMain).Assembly.GetTypes())
+            {
+                if (type.GetCustomAttributes(typeof(HarmonyPatch), false).Length == 0) continue;
+                try { _harmony.CreateClassProcessor(type).Patch(); }
+                catch (Exception e) { host.LogError("Harmony patching " + type.FullName + " failed: " + e); }
+            }
 
             // The strings follow the game's language: read now on a reload, at the game's first
             // language at boot.
@@ -213,6 +218,9 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.TalkScreen());
             ScreenManager.Register(new Screens.TownScreen());
             ScreenManager.Register(new Screens.ShopScreen());
+            ScreenManager.Register(new Screens.BattleScreen());
+            ScreenManager.Register(new Screens.LootScreenScreen());
+            ScreenManager.Register(new Screens.InventoryScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }
@@ -224,6 +232,11 @@ namespace PixelHeroesAccess.Module
                 _updateAnnounced = true;
                 Speech.Say(Strings.UpdateAvailable(_updateCheck.NewerVersion));
             }
+#if DEBUG
+            // Dev builds keep the game running while its window is in the background or minimized, so
+            // the dev server answers: the game sets this from its own option at every scene start.
+            if (!Application.runInBackground) Application.runInBackground = true;
+#endif
             Safe(LanguageSync.Tick, "language");
             FocusMode.Tick();
             Safe(Gamepad.Poll, "gamepad");
@@ -250,6 +263,8 @@ namespace PixelHeroesAccess.Module
             // On a reload the successor already owns the input: drop our hooks only. On a shutdown,
             // give everything back to the game.
             bool restore = _host == null || !_host.SuccessorLoaded;
+            try { Screens.Loot.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] loot: " + e); }
+            try { Battle.BattleEvents.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] battle events: " + e); }
             try { TextEntry.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] text entry: " + e); }
             try { FocusMode.Shutdown(restore); } catch (Exception e) { _host?.LogError("[dispose] focus: " + e); }
             try { Gamepad.Reset(); } catch (Exception e) { _host?.LogError("[dispose] gamepad: " + e); }

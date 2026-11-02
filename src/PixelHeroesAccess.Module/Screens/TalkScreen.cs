@@ -62,7 +62,8 @@ namespace PixelHeroesAccess.Module.Screens
             if (box == null || !box.IsTalking()) return;
             // A last page that waits for a choice (a quest on offer): focus to the first choice, queued
             // after the page so the page is heard whole.
-            if (box.IsEndedAndHalted())
+            bool options = box.mTalkMode == Talkbox.eTalkModes.eOverlandEvent && box.mOverlandEventState == Talkbox.eOverlandEventStates.Options;
+            if (box.IsEndedAndHalted() || options)
             {
                 if (!_haltHandled && _firstChoice != null)
                 {
@@ -106,18 +107,20 @@ namespace PixelHeroesAccess.Module.Screens
             {
                 b.AddItem(ControlId.Structural("talk:event"), GameNodes.Text(() => GameText.Line(Box?.mOverlandEvent?.pIngameName)));
             }
+            _firstChoice = null;
             if (box.v_ButtonsOptions != null)
                 foreach (var option in box.v_ButtonsOptions)
                 {
                     if (!GameNodes.IsShown(option)) continue;
                     var vt = GameNodes.Button(option);
                     vt.QuietVanish = true;
-                    b.AddItem(ControlId.ForObject(option), vt);
+                    var optionId = ControlId.ForObject(option);
+                    if (_firstChoice == null) { _firstChoice = optionId; _firstChoiceButton = option; }
+                    b.AddItem(optionId, vt);
                 }
             // The scene's own buttons beside the talk (Accept and Refuse in town), not the talk box's
             // click-anywhere selector, nor the figures standing in the scene.
             var root = GameScreens.InputRoot();
-            _firstChoice = null;
             foreach (var button in GameScreens.LiveButtons(root))
             {
                 if (button == box.v_Selector || button.transform.IsChildOf(box.transform)) continue;

@@ -24,6 +24,7 @@ namespace PixelHeroesAccess.Module.UI
         private static readonly KeyValuePair<string, string>[] ByKeyword =
         {
             new KeyValuePair<string, string>("QuestLog", "button.quest_log"),
+            new KeyValuePair<string, string>("NextRoom", "button.next_room"),
             new KeyValuePair<string, string>("LeaveTown", "button.leave_town"),
             new KeyValuePair<string, string>("Inventory", "button.inventory"),
             new KeyValuePair<string, string>("Pause", "button.pause"),
@@ -33,6 +34,18 @@ namespace PixelHeroesAccess.Module.UI
 
         private static readonly HashSet<string> _logged = new HashSet<string>();
 
+        // The keyword where a word starts: "Button_Back", "02 LeaveTown", never "DarkeningBackground".
+        private static bool StartsWord(string name, string keyword)
+        {
+            int at = name.IndexOf(keyword, System.StringComparison.Ordinal);
+            while (at >= 0)
+            {
+                if (at == 0 || !char.IsLetter(name[at - 1])) return true;
+                at = name.IndexOf(keyword, at + 1, System.StringComparison.Ordinal);
+            }
+            return false;
+        }
+
         public static string Of(Component widget)
         {
             if (widget == null) return null;
@@ -41,7 +54,7 @@ namespace PixelHeroesAccess.Module.UI
             if (spriteName != null && BySprite.TryGetValue(spriteName, out var key)) return Strings.Get(key);
             string name = widget.gameObject.name;
             foreach (var kv in ByKeyword)
-                if (name.IndexOf(kv.Key, System.StringComparison.OrdinalIgnoreCase) >= 0) return Strings.Get(kv.Value);
+                if (StartsWord(name, kv.Key)) return Strings.Get(kv.Value);
             if (_logged.Add(name + "|" + spriteName))
                 CoreLog.Info("IconLabels: unnamed button '" + name + "' sprite '" + spriteName + "'");
             string cleaned = name.StartsWith("Button ") ? name.Substring("Button ".Length) : name;
