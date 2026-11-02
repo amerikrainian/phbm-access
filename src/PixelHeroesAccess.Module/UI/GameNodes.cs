@@ -206,7 +206,13 @@ namespace PixelHeroesAccess.Module.UI
             return new NodeVtable
             {
                 ControlType = ControlTypes.Tab,
-                Announcements = new List<NodeAnnouncement> { LabelPart(lbl), DisabledPart(() => Usable(button)) },
+                // Selected, unspoken (landing selects it, so it would always say so): a vertical move
+                // into the tab row lands on the shown tab, as Tab into its stop does.
+                Announcements = new List<NodeAnnouncement>
+                {
+                    LabelPart(lbl), DisabledPart(() => Usable(button)),
+                    new NodeAnnouncement(() => selected() ? Strings.StateSelected : null, kind: AnnouncementKinds.Selected) { Spoken = false, Buffered = false },
+                },
                 SearchText = lbl,
                 OnActivate = select,
                 OnFocus = select,

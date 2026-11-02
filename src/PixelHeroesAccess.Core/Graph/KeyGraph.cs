@@ -463,19 +463,25 @@ namespace PixelHeroesAccess.Core.Graph
         public static GraphNode SelectedNodeInStop(GraphRender render, object stopKey)
         {
             foreach (var n in render.Order)
-            {
-                if (!Equals(n.StopKey, stopKey)) continue;
-                var anns = n.Vtable?.Announcements;
-                if (anns == null) continue;
-                foreach (var a in anns)
-                    if (a != null && a.Kind == AnnouncementKinds.Selected)
-                    {
-                        string t = null;
-                        try { t = a.Text?.Invoke(); } catch { }
-                        if (!string.IsNullOrEmpty(t)) return n;
-                    }
-            }
+                if (Equals(n.StopKey, stopKey) && ReadsSelected(n)) return n;
             return null;
+        }
+
+        /// <summary>Whether a node carries a non-empty selected-kind announcement part (spoken or not:
+        /// a tab, which focus selects, keeps the part silent).</summary>
+        public static bool ReadsSelected(GraphNode n)
+        {
+            var anns = n?.Vtable?.Announcements;
+            if (anns == null) return false;
+            foreach (var a in anns)
+            {
+                if (a == null || a.Kind != AnnouncementKinds.Selected) continue;
+                string t = null;
+                try { t = a.Text?.Invoke(); }
+                catch (Exception e) { CoreLog.Warning("KeyGraph: a selected part failed: " + e.Message); }
+                if (!string.IsNullOrEmpty(t)) return true;
+            }
+            return false;
         }
 
         // ---- tree operations (Right/Left semantics for expandable groups) ----

@@ -50,6 +50,29 @@ namespace PixelHeroesAccess.Tests
             Assert.Equal(Id("a2"), render.Nodes[Id("b2")].Transitions[GraphDir.Up].Destination);
         }
 
+        // A tab row: the shown tab carries a selected part (unspoken). Entering the row from above or
+        // below lands on it, not on the first tab.
+        [Fact]
+        public void UnkeyedRowsLandOnTheirSelectedItem()
+        {
+            NodeVtable Tab(string label, bool selected) => new NodeVtable
+            {
+                Announcements = new[]
+                {
+                    NodeAnnouncement.Static(label),
+                    new NodeAnnouncement(() => selected ? "selected" : null, kind: AnnouncementKinds.Selected) { Spoken = false },
+                },
+            };
+            var render = new GraphBuilder()
+                .AddItem(Id("back"), Vt("Back"))
+                .StartRow().AddItem(Id("t1"), Tab("One", false)).AddItem(Id("t2"), Tab("Two", false)).AddItem(Id("t3"), Tab("Three", true)).EndRow()
+                .AddItem(Id("line"), Vt("Line"))
+                .Build();
+
+            Assert.Equal(Id("t3"), render.Nodes[Id("back")].Transitions[GraphDir.Down].Destination);
+            Assert.Equal(Id("t3"), render.Nodes[Id("line")].Transitions[GraphDir.Up].Destination);
+        }
+
         [Fact]
         public void UnkeyedRowsLandOnFirstItem()
         {

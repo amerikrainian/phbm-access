@@ -225,7 +225,8 @@ namespace PixelHeroesAccess.Core.Graph
             return this;
         }
 
-        // The item a vertical move into the row lands on: the one its Entry names, else the first.
+        // The item a vertical move into the row lands on: the one its Entry names, else its selected
+        // member (the shown tab, the checked radio: where the player left the row), else the first.
         private static GraphNode EntryOf(Row row)
         {
             int index = 0;
@@ -233,6 +234,11 @@ namespace PixelHeroesAccess.Core.Graph
             {
                 try { index = row.Entry(); }
                 catch (Exception e) { CoreLog.Warning("GraphBuilder: a row's entry failed: " + e.Message); }
+            }
+            else
+            {
+                foreach (var item in row.Items)
+                    if (KeyGraph.ReadsSelected(item)) return item;
             }
             return row.Items[index >= 0 && index < row.Items.Count ? index : 0];
         }
