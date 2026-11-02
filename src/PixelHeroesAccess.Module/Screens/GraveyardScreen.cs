@@ -13,7 +13,7 @@ namespace PixelHeroesAccess.Module.Screens
     /// <summary>
     /// The graveyard (<see cref="Graveyard"/>): a tombstone per finished campaign, newest first, which
     /// the game shows one at a time by scrolling a strip and clicking. Here the gravedigger's count,
-    /// then a control per tombstone, "Defeat, 02.11.2026, 1 (Hard) "Fools of Radiance"" from the run's
+    /// then an entry per tombstone (no button: there is nothing to press), "Defeat, 02.11.2026, 1 (Hard) "Fools of Radiance"" from the run's
     /// own record (<see cref="Tombstone"/>); landing on one selects it as its click does
     /// (<see cref="Graveyard.EventSelectTombstone"/>, which works for one scrolled out of view), and its
     /// panel, read back from the game's displays, is the control buffer: the campaign, the dungeons
@@ -35,7 +35,8 @@ namespace PixelHeroesAccess.Module.Screens
                 var button = stone;
                 var record = Record(yard, button);
                 if (record == null) continue;
-                var vt = GameNodes.Button(() => Label(record), () => Game?.EventSelectTombstone(button));
+                // Landing selects it, as its click does; Enter has nothing more to do, so no role word.
+                var vt = GameNodes.Text(() => Label(record));
                 vt.OnFocus = () => Game?.EventSelectTombstone(button);
                 vt.Details = () => Panel(Game);
                 b.AddItem(ControlId.ForObject(button), vt);
