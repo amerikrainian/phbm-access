@@ -260,16 +260,18 @@ RIGHT NOW (a handler key silent somewhere says so with `.When(...)`). Ctrl+Shift
 Arrows navigate, Tab/Shift+Tab cycle stops (always wrapping; silent with one stop), Enter activates,
 Backspace is the secondary action, Escape backs out (the game's cancel; on a scene where that has
 nothing to do, `SceneScreen.PauseButton`/`CancelActs`, the pause button), Home/End jump,
-Alt+Up/Down jump sections, letters search the focused stop, Ctrl+arrows review the buffers. In a run (`UI/RunGlance`, Global category, live only where the line
-exists): Ctrl+H the party's health, Ctrl+G the gold, Ctrl+Q the quest under way. Every action
+Alt+Up/Down jump sections, letters search the focused stop, Ctrl+arrows review the buffers. In a
+run (`UI/RunGlance`, Global category, live only where the line exists): Ctrl+H the party's health, Ctrl+G the gold, Ctrl+Q the quest under way. Every action
 carries a gamepad binding too (`ControllerBinding`). The mod menu's All keys rebinds any of them.
 
 ## Buffers (`Core/Buffers`, `Module/UI/Buffers`)
 Ctrl+Left/Right switch buffers, Ctrl+Up/Down step lines; empty buffers are skipped; a focus change
 re-homes review to the control's buffer. **control** (the focused node's head line, then its
-details: an item's facts, `ItemLines`), **hero** and **items** (`NodeVtable.SideLines`: the hero a
-control concerns, whole, `HeroLines.Lines`, and its equipment and skills a line per slot), **log**
-(the fight's narration and the rewards, newest first).
+details: an item's facts, `ItemLines`; then the help's entry for each status, element and
+Redemption the lines name, `Nodes/Definitions`, also closing the hero buffer and an enemy's),
+**hero** and **items** (`NodeVtable.SideLines`: the hero a control concerns, whole,
+`HeroLines.Lines`, and its equipment and skills a line per slot), **log** (the fight's narration
+and the rewards, newest first).
 
 ## Languages (`Module/LanguageSync`, `Core/Strings`, `lang/`)
 The mod's words follow the game's language: `Options.pLanguage` (English or German), compared each

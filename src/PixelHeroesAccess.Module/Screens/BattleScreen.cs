@@ -394,11 +394,13 @@ namespace PixelHeroesAccess.Module.Screens
             return GameText.Tr(ET.Battle_EnemyInfoHPLow);
         }
 
-        // An enemy's further lines: its element.
+        // An enemy's further lines: its element, then the help's entries for it and its statuses.
         private static IEnumerable<string> EnemyLines(CharacterEnemy enemy)
         {
             if (enemy == null) yield break;
             yield return ItemLines.ElementName(enemy.GetElement());
+            foreach (var line in new Definitions().Element(enemy.GetElement()).StatusesOn(enemy).Lines)
+                yield return line;
         }
 
         private static bool IsMenuButton(BattleGUI gui, tk2dButton button)

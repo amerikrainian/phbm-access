@@ -83,12 +83,10 @@ namespace PixelHeroesAccess.Module.Screens
                 if (!listed.Contains((eStatusEffects)i)) all.Add((eStatusEffects)i);
             foreach (var status in all)
             {
-                var data = DataStatusEffects.GetData(status);
-                if (data == null) continue;
-                string head = data.pLifetime > 0 ? Strings.StatusTurns(GameText.Line(data.pName), data.pLifetime.ToString()) : GameText.Line(data.pName);
-                lines.Add(head + ": " + GameText.Line(data.pDescription));
+                string line = Definitions.StatusLine(status);
+                if (line != null) lines.Add(line);
             }
-            lines.Add(GameText.Tr(ET.GUI_HL_T_Redemption_Name) + ": " + GameText.Line(GameText.Tr(ET.GUI_HL_T_Redemption_Text)));
+            lines.Add(Definitions.RedemptionLine());
             return lines;
         }
 
@@ -97,19 +95,9 @@ namespace PixelHeroesAccess.Module.Screens
         private static List<string> Elements()
         {
             var lines = new List<string> { GameText.Line(GameText.Tr(ET.GUI_HL_T_Elements_Title)) };
-            foreach (var source in Elemental)
-            {
-                string beats = null, loses = null;
-                foreach (var target in Elemental)
-                {
-                    var relation = GameCore.CalculateElementRelationSourceToTarget(source, target);
-                    if (relation == eElementRelations.Strong) beats = ItemLines.ElementName(target);
-                    else if (relation == eElementRelations.Weak) loses = ItemLines.ElementName(target);
-                }
-                lines.Add(Strings.HelpElement(ItemLines.ElementName(source), beats ?? "-", loses ?? "-"));
-            }
+            foreach (var source in Elemental) lines.Add(Definitions.ElementLine(source));
             lines.Add(Strings.HelpElementSame(GameText.Tr(ET.ElementRelation_Absorbed)));
-            lines.Add(Strings.HelpElementNeutral(ItemLines.ElementName(eElements.Neutral)));
+            lines.Add(Definitions.ElementLine(eElements.Neutral));
             return lines;
         }
 

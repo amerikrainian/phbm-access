@@ -16,7 +16,8 @@ namespace PixelHeroesAccess.Module.Nodes
     /// the whole hero: name, race, class and level; health; experience; unspent attribute points; the
     /// five attributes with what one point adds to each; the six combat values; the protections
     /// (element defenses and status immunities, summed over the passive items, as the inventory's
-    /// panel shows them); the statuses on the hero in a fight. The items buffer is the hero's
+    /// panel shows them); the statuses on the hero in a fight; the help's entries for the elements and
+    /// statuses named (<see cref="Definitions"/>). The items buffer is the hero's
     /// equipment slot by slot, then the skills, each item as one line (name and headline value).
     /// </summary>
     public static class HeroLines
@@ -56,10 +57,22 @@ namespace PixelHeroesAccess.Module.Nodes
                 if (!tavern) lines.Add(Values(hero));
                 lines.Add(Protections(hero));
                 lines.Add(Statuses(hero));
+                lines.AddRange(Defined(hero).Lines);
             }
             catch (Exception e) { CoreLog.Warning("HeroLines: " + e); }
             lines.RemoveAll(string.IsNullOrWhiteSpace);
             return lines;
+        }
+
+        // The help's entries for the elements and statuses the protections and the statuses name.
+        private static Definitions Defined(CharacterHero hero)
+        {
+            var defs = new Definitions();
+            for (int i = 1; i < 5; i++)
+                if (Globals.RoundToInt(hero.GetTotalProtectionFactorAgainstElement((eElements)i) * 100f) > 0) defs.Element((eElements)i);
+            for (int i = 1; i < (int)eStatusEffects.COUNT; i++)
+                if (hero.GetProtectionAgainstStatus((eStatusEffects)i) > 0f) defs.Status((eStatusEffects)i);
+            return defs.StatusesOn(hero);
         }
 
         /// <summary>"Experience 120, next level at 200", or the game's maximum level line.</summary>

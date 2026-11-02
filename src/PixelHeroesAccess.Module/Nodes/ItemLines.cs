@@ -19,7 +19,9 @@ namespace PixelHeroesAccess.Module.Nodes
     /// cooldown, the range, the damage formula, a shield's defenses, the statuses it inflicts, the
     /// description. A passive item (body, head, trinket): its kind, the two defenses, the attribute
     /// bonuses, the element defenses, the status immunities, the description. A potion: what it heals,
-    /// how many, the description. The game's own words throughout; the joins are the mod's.
+    /// how many, the description. Then the help's entries for the statuses, elements and Redemption
+    /// those lines name (<see cref="Definitions"/>). The game's own words throughout; the joins are
+    /// the mod's.
     /// </summary>
     public static class ItemLines
     {
@@ -72,6 +74,7 @@ namespace PixelHeroesAccess.Module.Nodes
                 else if (item.pItemPotion != null) Potion(item.pItemPotion, lines);
             }
             catch (Exception e) { CoreLog.Warning("ItemLines: lines failed for " + Name(item) + ": " + e); }
+            lines.AddRange(new Definitions().Item(item).Lines);
             lines.RemoveAll(string.IsNullOrWhiteSpace);
             return lines;
         }
