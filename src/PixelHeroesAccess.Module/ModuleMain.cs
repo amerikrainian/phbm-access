@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using PixelHeroesAccess.Contracts;
 using PixelHeroesAccess.Core;
-using PixelHeroesAccess.Core.Audio;
 using PixelHeroesAccess.Core.Graph;
 using PixelHeroesAccess.Core.Input;
 using PixelHeroesAccess.Core.Screens;
@@ -40,19 +39,6 @@ namespace PixelHeroesAccess.Module
         // request lands with a release newer than the running build.
         private readonly UpdateChecker _updateCheck = new UpdateChecker();
         private bool _updateAnnounced;
-        // The mod's sound cues: their settings (volumes, intervals) and the engine every cue plays
-        // through (Guildrun's pattern).
-        private Audio.UnityCueEngine _cueEngine;
-
-        /// <summary>The sound settings of the live generation, for the sounds screen and the cues.</summary>
-        public static SoundVolumes Sounds { get; private set; }
-
-        /// <summary>The engine cues play through, the player's volumes applied.</summary>
-        public static IAudioEngine CueEngine { get; private set; }
-
-        /// <summary>The one door the mod's cues go through, each gated by its saved interval.</summary>
-        public static CuePlayer Cues { get; private set; }
-
         public void Load(IModHost host)
         {
             _host = host;
@@ -77,13 +63,6 @@ namespace PixelHeroesAccess.Module
             // loads the new module (which patches) before disposing the old one, and UnpatchSelf removes
             // by owner id, so a fixed id would let the old teardown strip the fresh load's patches.
             _harmony = new Harmony("com.amerikrainian.pixelheroesaccess.module." + Guid.NewGuid().ToString("N"));
-
-            // The sound cues: settings in the host's store, files under the plugin's assets/audio, played
-            // through Unity into the game's SFX mixer group, each gated by its saved interval.
-            Sounds = new SoundVolumes(host.Settings.Store);
-            _cueEngine = new Audio.UnityCueEngine(System.IO.Path.Combine(host.PluginDir, "assets", "audio"));
-            CueEngine = new VolumeScaledEngine(_cueEngine, Sounds);
-            Cues = new CuePlayer(CueEngine, Sounds, () => Time.unscaledTimeAsDouble);
 
             RegisterInput();
             // The player's own keys and buttons over the defaults just registered (the key list in the
@@ -298,11 +277,6 @@ namespace PixelHeroesAccess.Module
             try { KeyBindings.Clear(); } catch (Exception e) { _host?.LogError("[dispose] key bindings: " + e); }
             try { InputManager.Clear(); } catch (Exception e) { _host?.LogError("[dispose] input: " + e); }
             try { LanguageSync.Stop(); } catch (Exception e) { _host?.LogError("[dispose] language: " + e); }
-            try { _cueEngine?.Dispose(); } catch (Exception e) { _host?.LogError("[dispose] audio: " + e); }
-            _cueEngine = null;
-            CueEngine = null; // this generation's statics: the successor has its own
-            Cues = null;
-            Sounds = null;
             try { _harmony?.UnpatchSelf(); } catch (Exception e) { _host?.LogError("[dispose] harmony: " + e); }
             _harmony = null;
             _host = null;
