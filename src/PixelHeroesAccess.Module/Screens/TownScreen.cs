@@ -20,8 +20,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// what their quest stands at ("offers a quest" and its name, "quest in
     /// progress", "quest complete"). Enter goes there: the party is placed at the door or beside the
     /// person and the game's own path takes over (a building's door opens and the scene changes, the
-    /// blacksmith's shop opens, a person starts talking), so nothing waits on a walk. The second stop
-    /// is the game's interface (Leave Town, Inventory, Quest Log, Pause), the gold and the quest the
+    /// blacksmith's shop opens, a person starts talking), so nothing waits on a walk. After them, in
+    /// the same stop as a region of its own, the game's interface (Leave Town, Inventory, Quest Log, Pause), the gold and the quest the
     /// party is on. Talks, the shop, the reward screen and the popups are their own screens; while the
     /// party walks into a building nothing is listed.
     /// </summary>
@@ -37,7 +37,9 @@ namespace PixelHeroesAccess.Module.Screens
             var town = Game;
             if (town == null || town.mState != Town.eStates.eFree) return;
 
-            b.BeginStop("town:places");
+            // One stop: the street, then the interface, each a region (Alt+Up/Down between them).
+            b.BeginStop("town");
+            b.SetRegion("town:places");
             b.PushContext(Strings.TownPlaces, Strings.RoleList);
             var places = new List<Place>();
             for (int k = 0; k < (int)Town.eBuildings.COUNT; k++)
@@ -67,7 +69,7 @@ namespace PixelHeroesAccess.Module.Screens
                 b.AddItem(place.Npc != null ? ControlId.ForObject(place.Npc) : ControlId.Structural(place.Id), place.Node);
             b.PopContext();
 
-            b.BeginStop("town:menu");
+            b.SetRegion("town:menu");
             b.PushContext(null, null);
             if (town.v_Container_InterfaceFree != null)
                 foreach (var button in GameScreens.LiveButtons(town.v_Container_InterfaceFree.transform))
