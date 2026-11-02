@@ -217,3 +217,5 @@ arena.dismissed={0} dismissed
 arena.next=next: {0}
 campaign.victory=victory
 arena.fight=Fight
+button.travel_on=Travel on
+room.boss=the boss's room

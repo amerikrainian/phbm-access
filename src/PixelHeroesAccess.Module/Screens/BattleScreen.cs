@@ -34,6 +34,7 @@ namespace PixelHeroesAccess.Module.Screens
     {
         private BattleGUI.eBattleStates _lastState = BattleGUI.eBattleStates.COUNT;
         private BattleLogic _opened;
+        private string _bossPage;
 
         // Enemies sharing a name are numbered by their place when the fight began, per enemy, so a
         // number holds when the game closes the ranks after a death. Identity, not game state.
@@ -47,7 +48,11 @@ namespace PixelHeroesAccess.Module.Screens
         protected override bool Covered(BattleLogic game)
             => base.Covered(game) || (game.v_BattleGUI != null && game.v_BattleGUI.v_Lootscreen != null && game.v_BattleGUI.v_Lootscreen.IsActive());
 
-        public override void OnPop() => _lastState = BattleGUI.eBattleStates.COUNT;
+        public override void OnPop()
+        {
+            _lastState = BattleGUI.eBattleStates.COUNT;
+            _bossPage = null;
+        }
 
         public override void OnUpdate()
         {
@@ -59,6 +64,19 @@ namespace PixelHeroesAccess.Module.Screens
                 _opened = Game;
                 NumberEnemies();
                 BattleEvents.Report(Strings.BattleBegins(EnemyNames()));
+            }
+            // A boss opens with a speech bubble, page by page: each said as it comes, the boss first.
+            string page = BossPage(gui);
+            if (page != _bossPage)
+            {
+                bool first = _bossPage == null;
+                _bossPage = page;
+                if (page != null && Navigation.FocusActive())
+                {
+                    // The landing on the page would say it again.
+                    if (first) Navigation.QuietNextLanding();
+                    Speech.Say(first ? GameNodes.Sentences(EnemyName(Game?.GetMainBoss()), page) : page);
+                }
             }
             var state = gui.mBattleState;
             if (state == _lastState) return;
@@ -82,6 +100,14 @@ namespace PixelHeroesAccess.Module.Screens
             var gui = Gui;
             if (game == null || gui == null) return;
             var state = gui.mBattleState;
+            if (state == BattleGUI.eBattleStates.Intro && BossPage(gui) != null)
+            {
+                // The boss's speech waits for a click per page: Enter turns it, in one press.
+                var bubble = GameNodes.Button(() => BossPage(Gui), () => TurnBossPage(Gui));
+                bubble.ControlType = ControlTypes.Text;
+                b.AddItem(ControlId.Structural("battle:boss:speech"), bubble);
+                return;
+            }
             if (state != BattleGUI.eBattleStates.PlayerSelectedNothing && state != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget) return;
 
             b.BeginStop("battle:party");
@@ -209,6 +235,22 @@ namespace PixelHeroesAccess.Module.Screens
                 foreach (var enemy in game.pEnemies)
                     if (enemy != null && enemy.IsAlive()) names.Add(EnemyName(enemy));
             return string.Join(", ", names);
+        }
+
+        // The boss bubble's page while it shows, else null.
+        private static string BossPage(BattleGUI gui)
+        {
+            var bubble = gui != null ? gui.v_SpeechBubble_Boss : null;
+            if (bubble == null || !bubble.IsVisible() || bubble.v_TextAnimation == null) return null;
+            return GameText.Line(bubble.v_TextAnimation.mText);
+        }
+
+        private static void TurnBossPage(BattleGUI gui)
+        {
+            var bubble = gui != null ? gui.v_SpeechBubble_Boss : null;
+            if (bubble == null || !bubble.IsVisible()) return;
+            if (!bubble.v_TextAnimation.IsFinished()) bubble.v_TextAnimation.MakeFull();
+            bubble.EventClick();
         }
 
         private static ControlId ActionId(int hero, int slot) => ControlId.Structural("battle:action:" + hero + ":" + slot);

@@ -369,6 +369,10 @@ namespace PixelHeroesAccess.Core.Strings
             D("campaign.victory", "victory"),
             // The arena hub's start button (an icon).
             D("arena.fight", "Fight"),
+            // The inventory's go button outside a dungeon: back on the road.
+            D("button.travel_on", "Travel on"),
+            // The dungeon's last room, the boss's.
+            D("room.boss", "the boss's room"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -706,5 +710,7 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ArenaNext(string enemies) => F("arena.next", enemies);
         public static string CampaignVictory => Get("campaign.victory");
         public static string ArenaFight => Get("arena.fight");
+        public static string ButtonTravelOn => Get("button.travel_on");
+        public static string RoomBoss => Get("room.boss");
     }
 }

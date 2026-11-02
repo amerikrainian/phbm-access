@@ -110,7 +110,11 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("inv:menu");
             b.PushContext(null, null);
-            foreach (var button in new[] { inv.v_ButtonRoomOverview, inv.v_ButtonTown, inv.v_ButtonShop, inv.v_ButtonQuestLog, inv.v_ButtonHelp, inv.v_ButtonPause })
+            // The go button is the dungeon's next room there, and the road's way on elsewhere.
+            if (GameNodes.IsShown(inv.v_ButtonRoomOverview))
+                b.AddItem(ControlId.ForObject(inv.v_ButtonRoomOverview), GameNodes.Button(inv.v_ButtonRoomOverview,
+                    () => GameCore.GetGameState() == eGameStates.eDungeon ? Strings.ButtonNextRoom : Strings.ButtonTravelOn));
+            foreach (var button in new[] { inv.v_ButtonTown, inv.v_ButtonShop, inv.v_ButtonQuestLog, inv.v_ButtonHelp, inv.v_ButtonPause })
                 if (GameNodes.IsShown(button)) b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             b.AddItem(ControlId.Structural("inv:gold"), GameNodes.Text(TavernScreen.GoldLine));
             b.AddItem(ControlId.Structural("inv:backpack:count"), GameNodes.Text(ShopScreen.BackpackLine));
@@ -393,6 +397,7 @@ namespace PixelHeroesAccess.Module.Screens
             var dungeon = GameCore.GetCurrentDungeon();
             string name = dungeon != null ? Interop.GameText.Line(dungeon.GetData().pName) : null;
             if (session == null || GameCore.GetGameState() != eGameStates.eDungeon) return name;
+            if (session.pNextRoom == eDungeonRooms.RoomBoss) return UI.GameNodes.Sentences(name, Core.Strings.Strings.RoomBoss);
             int next = (int)session.pNextRoom + 1;
             int total = (int)eDungeonRooms.COUNT;
             return UI.GameNodes.Sentences(name, Core.Strings.Strings.RoomNext(next.ToString(), total.ToString()));
