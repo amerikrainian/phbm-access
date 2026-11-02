@@ -241,13 +241,16 @@ popups 10, the rename popup 12, the mod menu 50.
   target set), `TreasureScreen` (a try per living hero with the tested attribute and the game's
   chance; Destroy, Leave; the message line said as an attempt plays), `LootScreenScreen` (the reward
   taken as `CreateLoot*` makes it, since the game grants it at once and the screen only animates it).
-- **Battle**: `BattleScreen` — on the heroes' turn a row per hero (state, two hands, two skills,
-  whatever the game's hand/skill toggle shows; a stunned hero's one action), Enter selects as the
-  slot's click does (`BattleGUI.SelectHand`; the rest and cooldown refusals said), the targets the
-  range allows become a stop (Escape cancels), enemies by the game's condition word (it shows enemy
-  health only as Healthy/Wounded/Critical, nothing for a boss), Backspace offers throw away for
-  fist. A new turn lands on the first action of the first hero who may act. Enemies sharing a name
-  are numbered by their place at the fight's start. `Battle/BattleEvents` narrates in the game's own
+- **Battle**: `BattleScreen` — on the heroes' turn one stop, the field, in two regions: a row per
+  hero (state, two hands, two skills, whatever the game's hand/skill toggle shows; a stunned hero's
+  one action), then the enemies front to back, "1, Creepy Crawler 2, Healthy" (the place is what a
+  range counts, from the enemies' front whoever strikes; the condition word is all the game shows of
+  enemy health, nothing for a boss). Heroes and enemies are not paired by place: the game's ranges
+  give that no meaning. Enter selects as the slot's click does (`BattleGUI.SelectHand`; the rest and
+  cooldown refusals said); then the side the action addresses leads with "target" ("all") or "out
+  of range" (the game's selectors), focus goes to the first target, Enter strikes, Escape returns to
+  the action. Backspace offers throw away for fist. A new turn lands on the first action of the
+  first hero who may act. Enemies sharing a name are numbered by their place at the fight's start. `Battle/BattleEvents` narrates in the game's own
   log words (`LogScreen.AddMessageForAction`, deduplicated by outcome; `AddMessageForStunned`), plus
   what the game never logs: status ticks and ends (`StatusEffect.UpdateTick`), and game over and
   victory from `GameCore.HandleGameOver` (the scene changes the same frame). The game has no crits

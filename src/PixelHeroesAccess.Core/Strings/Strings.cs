@@ -275,7 +275,8 @@ namespace PixelHeroesAccess.Core.Strings
             // The fight's stops: the heroes and their actions, the targets of the chosen action, the enemies.
             D("battle.party", "party"),
             // {0} = the chosen item or skill.
-            D("battle.targets", "targets for {0}"),
+            D("battle.target", "target"),
+            D("battle.out_of_range", "out of range"),
             D("battle.enemies", "enemies"),
             // A target of an action that strikes every enemy or the whole party.
             D("battle.all", "all"),
@@ -654,7 +655,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ShopSellsFor(string amount) => F("shop.sells_for", amount);
         public static string ShopRefused => Get("shop.refused");
         public static string BattleParty => Get("battle.party");
-        public static string BattleTargets(string item) => F("battle.targets", item);
+        public static string BattleTarget => Get("battle.target");
+        public static string BattleOutOfRange => Get("battle.out_of_range");
         public static string BattleEnemies => Get("battle.enemies");
         public static string BattleAll => Get("battle.all");
         public static string BattleRested => Get("battle.rested");

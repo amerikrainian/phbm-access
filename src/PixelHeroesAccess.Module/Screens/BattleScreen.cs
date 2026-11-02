@@ -15,20 +15,23 @@ namespace PixelHeroesAccess.Module.Screens
 
     /// <summary>
     /// A fight (<see cref="BattleLogic"/>, its interface <see cref="BattleGUI"/>). On the heroes' turn
-    /// (<see cref="BattleGUI.eBattleStates.PlayerSelectedNothing"/>) the first stop is the party, a row
-    /// per hero: the hero ("name, HP, statuses", "rested" when it acted last turn, the game's rule that
-    /// a hero may not act two turns running), then its two hands' items and its two skills, each
-    /// "item summary, range" with a skill's cooldown. The game shows hands or skills at a time (a toggle
-    /// per hero); here all four are listed and the toggle is set as needed. A stunned hero's one action
-    /// is breaking free. Enter on an action selects it as clicking its slot does
-    /// (<see cref="BattleGUI.SelectHand"/>): the game checks the rest and the cooldown, says why when
-    /// it refuses, and otherwise shows the targets the item's range allows, which become the second
-    /// stop (focus lands there): each "name, health", "all" when the action strikes every one; Enter
-    /// strikes. Escape there cancels the choice. Then the enemies (name, the game's condition word,
-    /// statuses; the game shows enemies' health only as Healthy, Wounded or Critical, and nothing for
-    /// a boss), and the battle's buttons (Throw away, Quest log, Help, Pause) and its message line.
-    /// While an action plays nothing is listed; what happens is said by <see cref="BattleEvents"/>.
-    /// Backspace on a hand's item offers to throw it away for a bare fist (the game's own popup).
+    /// (<see cref="BattleGUI.eBattleStates.PlayerSelectedNothing"/>) the first stop is the field, two
+    /// regions. The party, a row per hero from the front: the hero ("HP, statuses", "rested" when it
+    /// acted last turn, the game's rule that a hero may not act two turns running), then its two
+    /// hands' items and its two skills, each "item summary, range" with a skill's cooldown. The game
+    /// shows hands or skills at a time (a toggle per hero); here all four are listed and the toggle is
+    /// set as needed. A stunned hero's one action is breaking free. Then the enemies from the front,
+    /// each "1, Creepy Crawler 2, Healthy": its place (what a range counts: range 1-2 reaches the
+    /// first two whoever strikes), its name, the game's condition word (the game shows enemies' health
+    /// only as Healthy, Wounded or Critical, and nothing for a boss), its statuses. Enter on an action
+    /// selects it as clicking its slot does (<see cref="BattleGUI.SelectHand"/>): the game checks the
+    /// rest and the cooldown, says why when it refuses, and otherwise marks the targets the range
+    /// allows. Then the characters on the side the action addresses lead with "target" ("all" when it
+    /// strikes every one) or "out of range", focus goes to the first target, and Enter on one strikes;
+    /// Escape cancels back to the action. The second stop is the message line and the battle's buttons
+    /// (Throw away, Quest log, Help, Pause). While an action plays nothing is listed; what happens is
+    /// said by <see cref="BattleEvents"/>. Backspace on a hand's item offers to throw it away for a
+    /// bare fist (the game's own popup).
     /// </summary>
     public sealed class BattleScreen : SceneScreen<BattleLogic>
     {
@@ -105,7 +108,24 @@ namespace PixelHeroesAccess.Module.Screens
             }
             else if (state == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget)
             {
-                Navigation.FocusStop("battle:targets");
+                FocusFirstTarget();
+            }
+        }
+
+        // The action the targets are for: Escape returns to it. Where focus was, not game state.
+        private static ControlId _chosen;
+
+        // Choosing an action marks its targets on the field; focus goes to the first on the side the
+        // action addresses (the enemies for an attack, else the party).
+        private static void FocusFirstTarget()
+        {
+            var gui = Gui;
+            if (gui == null || gui.v_Selectors == null) return;
+            bool offensive = gui.mSelectedHand != null && gui.mSelectedHand.IsOffensive();
+            for (int k = 0; k < gui.v_Selectors.Length; k++)
+            {
+                if ((k >= 3) != offensive) continue;
+                if (IsTarget(k) && Target(k) != null) { Navigation.FocusNode(CharacterId(k)); return; }
             }
         }
 
@@ -125,7 +145,14 @@ namespace PixelHeroesAccess.Module.Screens
             }
             if (state != BattleGUI.eBattleStates.PlayerSelectedNothing && state != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget) return;
 
-            b.BeginStop("battle:party");
+            // One stop: the party, a row per hero, then the enemies front to back, two regions
+            // (Alt+Up/Down between them). While an action waits for its target, the characters on the
+            // side it addresses say whether they are one ("target", "all", "out of range"), and Enter
+            // on a target strikes it.
+            bool targeting = state == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHand != null;
+            bool offensive = targeting && gui.mSelectedHand.IsOffensive();
+            b.BeginStop("battle:field");
+            b.SetRegion("battle:party");
             b.PushContext(Strings.BattleParty, Strings.RoleList);
             for (int i = 0; i < game.pHeroes.Length; i++)
             {
@@ -135,7 +162,9 @@ namespace PixelHeroesAccess.Module.Screens
                 // The row is the hero's: its name is said on entering it, its state on its first cell.
                 b.PushContext(GameText.Line(hero.GetName()), null, positions: false);
                 b.StartRow("battle:hero:" + index);
-                b.AddItem(ControlId.Structural("battle:hero:" + index), HeroNodes.Hero(() => Game?.pHeroes[index], () => HeroState(Game?.pHeroes[index])));
+                var head = HeroNodes.Hero(() => Game?.pHeroes[index], () => TargetPrefix(index, HeroState(Game?.pHeroes[index])));
+                if (targeting && !offensive) head.OnActivate = () => StrikeOrRefuse(index);
+                b.AddItem(CharacterId(index), head);
                 if (hero.IsAlive())
                 {
                     if (hero.HasStatusEffect(eStatusEffects.Stunned))
@@ -159,37 +188,18 @@ namespace PixelHeroesAccess.Module.Screens
             }
             b.PopContext();
 
-            if (state == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHand != null)
-            {
-                b.BeginStop("battle:targets");
-                b.PushContext(Strings.BattleTargets(GameText.Line(gui.mSelectedHand.GetNameFull())), Strings.RoleList);
-                bool all = gui.mSelectedHand.GetRange() == eRanges.OffensiveAll || gui.mSelectedHand.GetRange() == eRanges.DefensiveAll;
-                for (int k = 0; k < gui.v_Selectors.Length; k++)
-                {
-                    var selector = gui.v_Selectors[k];
-                    if (selector == null || !selector.gameObject.activeSelf) continue;
-                    int slot = k;
-                    Character target = slot < 3 ? (Character)game.pHeroes[slot] : game.pEnemies[slot - 3];
-                    if (target == null) continue;
-                    var vt = GameNodes.Button(() => (all ? Strings.BattleAll + ", " : "") + CharacterLabel(Target(slot)), () => Strike(slot));
-                    if (slot < 3) vt.SideLines = HeroNodes.Sides(() => Game?.pHeroes[slot]);
-                    else vt.Details = () => EnemyLines(Target(slot) as CharacterEnemy);
-                    vt.QuietVanish = true;
-                    b.AddItem(ControlId.Structural("battle:target:" + slot), vt);
-                }
-                b.PopContext();
-            }
-
-            b.BeginStop("battle:enemies");
-            b.PushContext(Strings.BattleEnemies, Strings.RoleList);
+            b.SetRegion("battle:enemies");
+            b.PushContext(Strings.BattleEnemies, Strings.RoleList, positions: false);
             for (int e = 0; e < game.pEnemies.Length; e++)
             {
                 var enemy = game.pEnemies[e];
                 if (enemy == null || !enemy.IsAlive()) continue;
-                int slot = e;
-                var vt = GameNodes.Text(() => CharacterLabel(Game?.pEnemies[slot]));
-                vt.Details = () => EnemyLines(Game?.pEnemies[slot]);
-                b.AddItem(ControlId.Structural("battle:enemy:" + slot), vt);
+                int slot = 3 + e;
+                var vt = GameNodes.Text(() => TargetPrefix(slot, EnemyRow(slot - 3)));
+                if (offensive) vt.OnActivate = () => StrikeOrRefuse(slot);
+                vt.Details = () => EnemyLines(Game?.pEnemies[slot - 3]);
+                vt.QuietVanish = true;
+                b.AddItem(CharacterId(slot), vt);
             }
             b.PopContext();
 
@@ -210,7 +220,10 @@ namespace PixelHeroesAccess.Module.Screens
             {
                 var gui = Gui;
                 if (gui != null && gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget)
+                {
                     gui.SetGUIToNewState(BattleGUI.eBattleStates.PlayerSelectedNothing);
+                    if (_chosen != null) Navigation.FocusNode(_chosen);
+                }
                 else Back();
             });
         }
@@ -303,9 +316,10 @@ namespace PixelHeroesAccess.Module.Screens
             if (!hero.IsAlive()) return;
             if (!hero.CanActPossibly()) { Speech.Say(GameText.Tr(ET.MessageSelectedHeroHasToRest), interrupt: true); return; }
             if (skill && !((ItemActiveSkill)item).IsReadyForUse()) { Speech.Say(GameText.Tr(ET.MessageSelectedCoolingDown), interrupt: true); return; }
+            _chosen = ActionId(heroIndex, slot);
             if (gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHand == item)
             {
-                Navigation.FocusStop("battle:targets");
+                FocusFirstTarget();
                 return;
             }
             if (!hero.HasStatusEffect(eStatusEffects.Stunned))
@@ -338,6 +352,49 @@ namespace PixelHeroesAccess.Module.Screens
                 case 4: gui.EventTargetEnemy2(); break;
                 default: gui.EventTargetEnemy3(); break;
             }
+        }
+
+        // A character's control on the field by the game's selector slot: 0 to 2 the heroes, 3 to 5 the
+        // enemies.
+        private static ControlId CharacterId(int slot)
+            => ControlId.Structural(slot < 3 ? "battle:hero:" + slot : "battle:enemy:" + (slot - 3));
+
+        // Whether the chosen action may strike this slot: the game shows that slot's selector.
+        private static bool IsTarget(int slot)
+        {
+            var gui = Gui;
+            if (gui == null || gui.v_Selectors == null || slot >= gui.v_Selectors.Length) return false;
+            var selector = gui.v_Selectors[slot];
+            return selector != null && selector.gameObject.activeSelf;
+        }
+
+        // While an action waits for its target, the side it addresses says what each is to it: "target"
+        // ("all" when it strikes every one), "out of range"; else nothing.
+        private static string TargetPrefix(int slot, string label)
+        {
+            var gui = Gui;
+            if (label == null || gui == null || gui.mBattleState != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget || gui.mSelectedHand == null)
+                return label;
+            if ((slot >= 3) != gui.mSelectedHand.IsOffensive()) return label;
+            var range = gui.mSelectedHand.GetRange();
+            string mark = !IsTarget(slot) ? Strings.BattleOutOfRange
+                : range == eRanges.OffensiveAll || range == eRanges.DefensiveAll ? Strings.BattleAll
+                : Strings.BattleTarget;
+            return mark + ", " + label;
+        }
+
+        private static void StrikeOrRefuse(int slot)
+        {
+            if (IsTarget(slot)) Strike(slot);
+            else Speech.Say(Strings.BattleOutOfRange, interrupt: true);
+        }
+
+        // "1, Creepy Crawler 2, Healthy": the enemy's place from the front (what a range counts), then
+        // its name, condition and statuses.
+        private static string EnemyRow(int index)
+        {
+            var enemy = Game?.pEnemies[index];
+            return enemy == null ? null : (index + 1) + ", " + CharacterLabel(enemy);
         }
 
         private static Character Target(int slot)
