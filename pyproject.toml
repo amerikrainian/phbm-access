@@ -1,0 +1,6 @@
+[project]
+name = "phbm-access"
+version = "0.1.0"
+description = "Dev tools for the Pixel Heroes accessibility mod"
+requires-python = ">=3.13"
+dependencies = []

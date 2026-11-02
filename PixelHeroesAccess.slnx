@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/PixelHeroesAccess.Contracts/PixelHeroesAccess.Contracts.csproj" />
+  <Project Path="src/PixelHeroesAccess.Core/PixelHeroesAccess.Core.csproj" />
+  <Project Path="src/PixelHeroesAccess.Module/PixelHeroesAccess.Module.csproj" />
+  <Project Path="src/PixelHeroesAccess/PixelHeroesAccess.csproj" />
+  <Project Path="src/PixelHeroesAccess.Tests/PixelHeroesAccess.Tests.csproj" />
+</Solution>
