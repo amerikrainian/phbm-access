@@ -20,8 +20,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// press. The stock: each offer "summary, price", with "not enough gold" when the party cannot
     /// pay; Enter buys it. The backpack: each item with what it sells for (potions are not sold, as
     /// in the game); Enter sells it. The equipment: each hero's slots, Enter sells what is in one.
-    /// Then the gold, the backpack count against its limit (the game lets a purchase exceed it; only
-    /// leaving town is then refused), and the shop's buttons (Inventory, Help, Close). Every press
+    /// Then the shop's buttons (Inventory, Close, Help), the gold and the backpack count against its
+    /// limit (the game lets a purchase exceed it; only leaving town is then refused). Every press
     /// goes through the game: the tab, the hero and the item selected as clicks select them, then the
     /// Buy/Sell button's own click, so its checks hold; the result is said a few frames on.
     /// </summary>
@@ -97,10 +97,12 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("shop:info");
             b.PushContext(null, null);
+            // As every screen lists them (GameScreens.ButtonRank): the content, the way out, the system
+            // button; then the lines.
+            foreach (var button in new[] { shop.v_Button_Inventory, shop.v_ButtonClose, shop.v_Button_Help })
+                if (GameNodes.IsShown(button)) b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             b.AddItem(ControlId.Structural("shop:gold"), GameNodes.Text(TavernScreen.GoldLine));
             b.AddItem(ControlId.Structural("shop:backpack:count"), GameNodes.Text(BackpackLine));
-            foreach (var button in new[] { shop.v_Button_Inventory, shop.v_Button_Help, shop.v_ButtonClose })
-                if (GameNodes.IsShown(button)) b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             b.PopContext();
         }
 

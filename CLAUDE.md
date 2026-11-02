@@ -156,6 +156,11 @@ prefix on `InputGamepad.HandleControllerInput`, its cursor hidden); the pads are
 mod's controller bindings (`Module/Input/Gamepad`, the Input System's `Gamepad.all`). The game reads
 no keyboard, so nothing else needs silencing. Ctrl+Shift+A hands everything back.
 
+**Button order is one rule everywhere**: the content, then the way out (Leave, Back, Cancel,
+Close, Exit), then the system buttons (Quest Log, Help, Pause), then the status lines.
+`GameScreens.LiveButtons` sorts by it (`ButtonRank`, by object name, then reading order); a screen
+listing buttons by hand follows it too.
+
 **No scene scans in feature code** except where the game gives no registry: screens find their game
 screen by `ScreenBase.pCurrentInstance` and its serialized fields (`Module/Interop/GameScreens`); the
 fallback's button and text lists walk the topmost input root's children (a popup, the shop, the

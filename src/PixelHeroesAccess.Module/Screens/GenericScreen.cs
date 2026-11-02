@@ -58,7 +58,12 @@ namespace PixelHeroesAccess.Module.Screens
             var items = new List<Component>(buttons);
             if (isPopup) items.AddRange(LooseTexts(root));
             if (items.Count == 0) return;
-            items.Sort(GameScreens.ReadingOrder);
+            // A popup's texts read with its content; its way out and system buttons come after.
+            items.Sort((x, y) =>
+            {
+                int rank = GameScreens.ButtonRank(x as tk2dButton).CompareTo(GameScreens.ButtonRank(y as tk2dButton));
+                return rank != 0 ? rank : GameScreens.ReadingOrder(x, y);
+            });
             b.PushContext(null, null);
             ControlId first = null;
             foreach (var item in items)

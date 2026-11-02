@@ -53,7 +53,8 @@ namespace PixelHeroesAccess.Module.Interop
         /// <summary>The buttons a player sees under a root, as the game's own gamepad lists them
         /// (<see cref="InputGamepad.HandleControllerInput"/>: shown, wired, not a scroll handle), the
         /// disabled ones too (a greyed-out Continue is information; pressing one does nothing), in
-        /// reading order: top to bottom, then left to right. The root is the one the game lets input
+        /// reading order (top to bottom, then left to right) within <see cref="ButtonRank"/>: the
+        /// content, then the way out, then the game's system buttons. The root is the one the game lets input
         /// reach (<see cref="InputRoot"/>), so a shown button is pressable unless disabled.</summary>
         public static List<tk2dButton> LiveButtons(Transform root)
         {
@@ -65,8 +66,39 @@ namespace PixelHeroesAccess.Module.Interop
                 if (!b.gameObject.activeInHierarchy || !b.HasTriggerTarget()) continue;
                 list.Add(b);
             }
-            list.Sort(ReadingOrder);
+            list.Sort(ButtonOrder);
             return list;
+        }
+
+        /// <summary><see cref="ButtonRank"/>, then reading order.</summary>
+        public static int ButtonOrder(tk2dButton a, tk2dButton b)
+        {
+            int rank = ButtonRank(a).CompareTo(ButtonRank(b));
+            return rank != 0 ? rank : ReadingOrder(a, b);
+        }
+
+        /// <summary>Where a button goes in a list: 0 the content (wares, drinks, choices, tabs), 1 the
+        /// way out (Leave, Leave Town, Back, Cancel, Close, Exit), 2 the system buttons the game puts
+        /// on every screen (Quest Log, Help, Pause). The game lays these out in columns and corners,
+        /// so reading order alone puts Leave between the drinks. By the prefab's object name, its
+        /// numbering and separators dropped ("Button 02 LeaveTown", "Button_Back").</summary>
+        public static int ButtonRank(tk2dButton button)
+        {
+            if (button == null) return 0;
+            var sb = new System.Text.StringBuilder();
+            foreach (char c in button.gameObject.name)
+                if (char.IsLetter(c)) sb.Append(char.ToLowerInvariant(c));
+            string n = sb.ToString();
+            if (n.StartsWith("button")) n = n.Substring(6);
+            switch (n)
+            {
+                case "leave": case "leavetown": case "back": case "cancel": case "close": case "exit":
+                    return 1;
+                case "questlog": case "help": case "pause":
+                    return 2;
+                default:
+                    return 0;
+            }
         }
 
         /// <summary>A click target on a figure or the scenery rather than a control: a hero's or an
