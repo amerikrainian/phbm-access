@@ -226,6 +226,14 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.TreasureScreen());
             ScreenManager.Register(new Screens.GameHelpScreen());
             ScreenManager.Register(new Screens.QuestLogScreen());
+            ScreenManager.Register(new Screens.TempleScreen());
+            ScreenManager.Register(new Screens.GraveyardScreen());
+            ScreenManager.Register(new Screens.ProgressScreen());
+            ScreenManager.Register(new Screens.CreditsScreen());
+            ScreenManager.Register(new Screens.ArenaStartupScreen());
+            ScreenManager.Register(new Screens.ArenaPartyScreen());
+            ScreenManager.Register(new Screens.ArenaHeroCardScreen());
+            ScreenManager.Register(new Screens.ArenaHubScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }

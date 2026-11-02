@@ -37,7 +37,8 @@ namespace PixelHeroesAccess.Module.Screens
             if (popup == _announced) return;
             if (popup != null && !popup.IsActiveAndNotMoving()) return;
             _announced = popup;
-            if (popup == null || !Navigation.FocusActive()) return;
+            // The rename popup is typed into; TextEntry says it.
+            if (popup == null || popup is PopupHeroRename || !Navigation.FocusActive()) return;
             string message = GameNodes.Sentences(PopupTexts(popup.transform));
             if (!string.IsNullOrWhiteSpace(message)) Speech.Say(message);
         }

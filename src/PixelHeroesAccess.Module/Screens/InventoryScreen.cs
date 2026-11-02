@@ -359,8 +359,9 @@ namespace PixelHeroesAccess.Module.Screens
     /// <summary>
     /// The dungeon's room overview (<see cref="Inventory.v_Popup_RoomOverview"/>), which draws the rooms
     /// as a row of pictures, the cleared ones marked and the next one moving: said as words, the
-    /// dungeon and "room 3 of 8, the boss in room 8" (eight rooms, the last the boss's:
-    /// <see cref="eDungeonRooms"/>), then the popup's buttons (Enter Room, Back, Quest Log).
+    /// dungeon and "room 3 of 8, the boss in the last" (eight rooms, the last the boss's:
+    /// <see cref="eDungeonRooms"/>), said as the popup opens and listed after its buttons (Enter Room
+    /// first, then Back and Quest Log).
     /// </summary>
     public sealed class RoomOverviewScreen : PopupScreen
     {
@@ -370,18 +371,19 @@ namespace PixelHeroesAccess.Module.Screens
 
         protected override Popup Resolve() => Game != null ? Game.v_Popup_RoomOverview : null;
 
+        public override void OnPush() => UI.ScreenIntro.Say(Where());
+
         public override void Build(Core.Graph.GraphBuilder b)
         {
             var inv = Game;
             if (inv == null) return;
             b.PushContext(null, null);
-            b.AddItem(Core.Graph.ControlId.Structural("rooms:where"), UI.GameNodes.Text(Where));
             var buttons = Interop.GameScreens.LiveButtons(inv.v_Popup_RoomOverview.transform);
             // Enter Room first: the reason the popup is open.
             buttons.Sort((x, y) => (y.gameObject.name.Contains("Enter") ? 1 : 0) - (x.gameObject.name.Contains("Enter") ? 1 : 0));
             foreach (var button in buttons)
                 b.AddItem(Core.Graph.ControlId.ForObject(button), UI.GameNodes.ForButton(button));
-            if (buttons.Count > 0) b.SetStart(Core.Graph.ControlId.ForObject(buttons[0]));
+            b.AddItem(Core.Graph.ControlId.Structural("rooms:where"), UI.GameNodes.Text(Where));
             b.PopContext();
         }
 

@@ -71,14 +71,22 @@ STAGES = {
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--until", choices=sorted(STAGES), default=None)
-    ap.add_argument("--steps", type=int, default=200)
+    ap.add_argument("--steps", type=int, default=25)
     ap.add_argument("--treasure", choices=("try", "leave"), default="leave")
     args = ap.parse_args()
     start = cursor()
     target = STAGES.get(args.until)
+    last, same = None, 0
     for step in range(args.steps):
         s = nav()
         screen = s["screen"]
+        # A step that changes nothing (same screen, focus and readout) three times running is stuck.
+        key = (screen, s["focus"], s["readout"])
+        same = same + 1 if key == last else 0
+        last = key
+        if same >= 3 and screen not in ("game.overland", "game.battle"):
+            print(f"stuck on {screen} at step {step}: {s['readout']}")
+            break
         if target and screen == target:
             print(f"reached {args.until} at step {step}")
             break
@@ -94,7 +102,7 @@ def main() -> int:
             post("/eval", "var inv = ScreenBase.pCurrentInstance as Inventory; inv.v_ButtonRoomOverview.TriggerClick(); 0")
             time.sleep(1.5)
         elif screen == "inventory.rooms":
-            press("home", "confirm", pause=3)
+            press("confirm", pause=3)
         elif screen == "game.treasure":
             if args.treasure == "leave":
                 post("/eval", "(ScreenBase.pCurrentInstance as RoomTreasure).EventButtonLeave(); 0")
@@ -115,7 +123,6 @@ def main() -> int:
         else:
             print(f"unknown screen {screen} at step {step}: {s['readout']}")
             break
-    print(get(f"/speech?since={max(0, start)}").splitlines()[-1:][0] if True else "")
     lines = get(f"/speech?since={start}").splitlines()[1:]
     for line in lines[-25:]:
         print(line)

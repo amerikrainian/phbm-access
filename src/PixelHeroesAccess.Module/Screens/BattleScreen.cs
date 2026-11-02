@@ -74,10 +74,6 @@ namespace PixelHeroesAccess.Module.Screens
             {
                 Navigation.FocusStop("battle:targets");
             }
-            else if (state == BattleGUI.eBattleStates.GameOver)
-            {
-                BattleEvents.Report(Strings.BattleDefeat);
-            }
         }
 
         public override void Build(GraphBuilder b)

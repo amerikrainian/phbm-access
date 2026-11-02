@@ -501,7 +501,7 @@ namespace PixelHeroesAccess.Core.Strings
             // What one level-up point adds to each attribute; {0} = "Life 3, Strength 2, ...".
             D("hero.per_point", "per point: {0}"),
             // A status on a character: {0} = its name, {1} = turns left.
-            D("status.turns", "{0} {1} turns"),
+            D("status.turns", "{0}, turns {1}"),
             // An equipment slot and what it holds: {0} = the slot, {1} = the item or empty.
             D("slot.line", "{0}: {1}"),
             // Equipment slots.
@@ -631,6 +631,28 @@ namespace PixelHeroesAccess.Core.Strings
             D("help.element_same", "the same element: {0}"),
             // {0} = Neutral.
             D("help.element_neutral", "{0}: no strength or weakness"),
+            // The temple's revive: {0} = the dead hero, {1} = the price.
+            D("temple.revive", "revive {0}, {1}"),
+            // How many of a potion the party carries.
+            D("temple.carried", "carried {0}"),
+            // Not yet available (a campaign, a hero, an achievement).
+            D("state.locked", "locked"),
+            // An achievement earned.
+            D("state.unlocked", "unlocked"),
+            // A campaign's or a hero's record.
+            D("progress.counts", "victories {0}, defeats {1}"),
+            // A counting achievement's progress.
+            D("progress.of", "{0} of {1}"),
+            // The hero rename popup opening: {0} = the game's "Rename Hero", {1} = the current name.
+            D("rename.open", "{0}: {1}"),
+            // An arena session's tombstone: {0} = the rounds it reached.
+            D("arena.tombstone", "round {0}"),
+            // A hero taken out of the arena party.
+            D("arena.dismissed", "{0} dismissed"),
+            // The arena's next enemies.
+            D("arena.next", "next: {0}"),
+            // The campaign won.
+            D("campaign.victory", "victory"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -1010,5 +1032,16 @@ namespace PixelHeroesAccess.Core.Strings
         public static string HelpElement(string element, string beats, string loses) => F("help.element", element, beats, loses);
         public static string HelpElementSame(string absorbed) => F("help.element_same", absorbed);
         public static string HelpElementNeutral(string neutral) => F("help.element_neutral", neutral);
+        public static string TempleRevive(string hero, string cost) => F("temple.revive", hero, cost);
+        public static string TempleCarried(string count) => F("temple.carried", count);
+        public static string StateLocked => Get("state.locked");
+        public static string StateUnlocked => Get("state.unlocked");
+        public static string ProgressCounts(string victories, string defeats) => F("progress.counts", victories, defeats);
+        public static string ProgressOf(string current, string total) => F("progress.of", current, total);
+        public static string RenameOpen(string title, string name) => F("rename.open", title, name);
+        public static string ArenaTombstone(string rounds) => F("arena.tombstone", rounds);
+        public static string ArenaDismissed(string hero) => F("arena.dismissed", hero);
+        public static string ArenaNext(string enemies) => F("arena.next", enemies);
+        public static string CampaignVictory => Get("campaign.victory");
     }
 }

@@ -95,6 +95,18 @@ namespace PixelHeroesAccess.Module.Battle
             }
         }
 
+        // The end of a campaign or an arena session: the game switches scenes the same frame, so this
+        // is said from the call itself.
+        [HarmonyPatch(typeof(GameCore), nameof(GameCore.HandleGameOver))]
+        private static class GameOver
+        {
+            private static void Prefix(GameSession.eVictoryTags __0)
+            {
+                try { Report(__0 == GameSession.eVictoryTags.Victory ? Strings.CampaignVictory : Strings.BattleDefeat); }
+                catch (Exception e) { CoreLog.Warning("BattleEvents: game over failed: " + e); }
+            }
+        }
+
         private static string ItemSigned(int value) => value > 0 ? "+" + value : value.ToString();
 
         // The log's lines as one utterance: each cleaned, a target's arrow dropped, its KILL mark last.
