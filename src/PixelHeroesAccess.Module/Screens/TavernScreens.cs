@@ -16,10 +16,10 @@ namespace PixelHeroesAccess.Module.Screens
     /// The tavern. At a new game (<see cref="Tavern.eTavernStates.HeroSelection"/>) it is three
     /// stops: the heroes waiting at the tables (<see cref="Tavern.mHeroesTavern"/>, each "name, race
     /// class", "hired" once in the party; Enter opens the game's hero card, where Hire is; then the
-    /// re-roll line and button), the party
+    /// re-roll line and button, and Start once three are hired), the party
     /// of up to three (<see cref="Tavern.mHeroesSelected"/>, which the game keeps sorted by how much a
     /// hero can take: a row per slot, the hero (Enter opens the card) and its Unhire button), and the
-    /// rest: Start once three are hired, Help and Pause; Escape is Pause. On a later visit
+    /// rest: Help and Pause; Escape is Pause. On a later visit
     /// (<see cref="Tavern.eTavernStates.FreeDecision"/>) it is the game's buttons (the four drinks,
     /// Talk, Leave) and the gold. Every hero carries the hero and items buffers.
     /// </summary>
@@ -54,7 +54,8 @@ namespace PixelHeroesAccess.Module.Screens
                         () => game.EventSelectHero(hero), tavern: true));
                 }
             }
-            // The re-roll replaces these heroes: its line (how many are left) and button close the stop.
+            // The re-roll replaces these heroes: its line (how many are left) and button, then Start, close
+            // the stop.
             var reroll = game.v_Container_Reroll;
             if (reroll != null && reroll.gameObject.activeInHierarchy)
             {
@@ -62,6 +63,8 @@ namespace PixelHeroesAccess.Module.Screens
                 var button = reroll.GetAButton(1);
                 if (button != null) b.AddItem(ControlId.Structural("tavern:reroll"), GameNodes.Button(button));
             }
+            if (GameNodes.IsShown(game.v_Button_Start))
+                b.AddItem(ControlId.Structural("tavern:start"), GameNodes.Button(game.v_Button_Start));
             b.PopContext();
 
             b.BeginStop("tavern:party");
@@ -83,8 +86,6 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("tavern:menu");
             b.PushContext(null, null);
-            if (GameNodes.IsShown(game.v_Button_Start))
-                b.AddItem(ControlId.Structural("tavern:start"), GameNodes.Button(game.v_Button_Start));
             AddIfShown(b, "tavern:help", game.v_Button_Help);
             AddIfShown(b, "tavern:pause", game.v_Button_Pause);
             b.PopContext();
