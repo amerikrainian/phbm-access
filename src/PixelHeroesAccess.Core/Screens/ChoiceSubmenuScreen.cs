@@ -22,6 +22,13 @@ namespace PixelHeroesAccess.Core.Screens
         /// focus enters the row (unless the option landed on already says it).</summary>
         public string Row;
 
+        /// <summary>The control buffer's lines after the label, or null: an option standing for a
+        /// control elsewhere (an item slot) carries that control's buffers.</summary>
+        public Func<IEnumerable<string>> Details;
+
+        /// <summary>The side buffers' lines by buffer key (the hero, its items), or null.</summary>
+        public Func<string, IEnumerable<string>> SideLines;
+
         public ChoiceOption(string label, Action onSelect, string detail = null, bool enabled = true, string row = null)
         {
             Label = label;
@@ -110,6 +117,8 @@ namespace PixelHeroesAccess.Core.Screens
                         new NodeAnnouncement(() => option.Enabled ? null : Strings.StateDisabled, kind: AnnouncementKinds.Enabled),
                     },
                     SearchText = () => option.Label,
+                    Details = option.Details,
+                    SideLines = option.SideLines,
                     OnActivate = () =>
                     {
                         if (!option.Enabled) return;

@@ -288,8 +288,8 @@ namespace PixelHeroesAccess.Module.Screens
             {
                 int other = 1 - slot;
                 var there = Slot(hero, other);
-                options.Add(new ChoiceOption(Strings.SlotLine(Strings.InventoryMoveTo(HeroLines.SlotName(other)), SlotSummary(there, hero)),
-                    () => Equip(hero, item, other)));
+                options.Add(SlotOption(Strings.SlotLine(Strings.InventoryMoveTo(HeroLines.SlotName(other)), SlotSummary(there, hero)),
+                    () => Equip(hero, item, other), there, hero));
             }
             options.Add(new ChoiceOption(Strings.InventoryToBackpack, () => Unequip(hero, item)));
             options.Add(new ChoiceOption(Strings.InventoryThrowAway, () => ConfirmTrash(hero, item)));
@@ -300,6 +300,14 @@ namespace PixelHeroesAccess.Module.Screens
         // Neutral"), or empty.
         private static string SlotSummary(Item there, CharacterHero hero)
             => there != null ? ItemLines.Summary(there, hero) : Strings.SlotEmpty;
+
+        // A menu option standing for a hero's slot: the buffers the party's slot has (the item's facts,
+        // the hero, its items), so the two read the same.
+        private static ChoiceOption SlotOption(string label, Action select, Item there, CharacterHero hero, string row = null)
+        {
+            var vt = HeroNodes.Item(() => there, () => hero);
+            return new ChoiceOption(label, select, row: row) { Details = vt.Details, SideLines = vt.SideLines };
+        }
 
         private static void OpenBackpackMenu(Item item)
         {
@@ -327,8 +335,8 @@ namespace PixelHeroesAccess.Module.Screens
                     {
                         int slot = s;
                         var there = Slot(hero, slot);
-                        options.Add(new ChoiceOption(Strings.SlotLine(HeroLines.SlotName(slot), SlotSummary(there, hero)), () => Equip(hero, item, slot),
-                            row: GameText.Line(hero.GetName())));
+                        options.Add(SlotOption(Strings.SlotLine(HeroLines.SlotName(slot), SlotSummary(there, hero)), () => Equip(hero, item, slot),
+                            there, hero, GameText.Line(hero.GetName())));
                     }
                 }
             }
@@ -340,8 +348,8 @@ namespace PixelHeroesAccess.Module.Screens
                     if (h == null || !h.IsAlive()) continue;
                     var hero = h;
                     var there = Slot(hero, slot);
-                    options.Add(new ChoiceOption(Strings.SlotLine(GameText.Line(hero.GetName()), SlotSummary(there, hero)), () => Equip(hero, item, slot),
-                        row: Strings.InventoryEquipSlot(HeroLines.SlotName(slot))));
+                    options.Add(SlotOption(Strings.SlotLine(GameText.Line(hero.GetName()), SlotSummary(there, hero)), () => Equip(hero, item, slot),
+                        there, hero, Strings.InventoryEquipSlot(HeroLines.SlotName(slot))));
                 }
             }
             if (item.GetItemType() != eItemTypes.Potion)
