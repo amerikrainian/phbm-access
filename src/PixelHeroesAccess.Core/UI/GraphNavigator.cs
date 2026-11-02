@@ -655,11 +655,9 @@ namespace PixelHeroesAccess.Core.UI
                     if (!string.IsNullOrEmpty(Screen.ScreenName)) Speak(Screen.ScreenName, interrupt: true);
                     return true;
                 }
-                if (Screen != null && Screen.Wrap)
-                    ni = ((ni % stops.Count) + stops.Count) % stops.Count;
-                else
-                    return true; // at the end; consume, no wrap
-                if (ni == idx) return true; // a single stop wraps onto itself: nothing to move to
+                // Tab always wraps; a single stop wraps onto itself: nothing to move to, nothing said.
+                ni = ((ni % stops.Count) + stops.Count) % stops.Count;
+                if (ni == idx) return true;
             }
             return LandOnStop(stops[ni]);
         }

@@ -21,6 +21,10 @@ namespace PixelHeroesAccess.Module.Screens
     {
         public override string Key => "game.overland";
 
+        protected override tk2dButton PauseButton(Overland game) => game.v_ButtonsMenu != null && game.v_ButtonsMenu.Length > 2 ? game.v_ButtonsMenu[2] : null;
+        protected override bool CancelActs(Overland game)
+            => (game.v_Lootscreen != null && game.v_Lootscreen.IsActive()) || (game.v_Popup_Inventory != null && game.v_Popup_Inventory.IsActiveOrMovingIn());
+
         public override void OnPush()
         {
             var road = Game;

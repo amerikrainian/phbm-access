@@ -15,16 +15,19 @@ namespace PixelHeroesAccess.Module.Screens
     /// <summary>
     /// The tavern. At a new game (<see cref="Tavern.eTavernStates.HeroSelection"/>) it is three
     /// stops: the heroes waiting at the tables (<see cref="Tavern.mHeroesTavern"/>, each "name, race
-    /// class", "hired" once in the party; Enter opens the game's hero card, where Hire is), the party
+    /// class", "hired" once in the party; Enter opens the game's hero card, where Hire is; then the
+    /// re-roll line and button), the party
     /// of up to three (<see cref="Tavern.mHeroesSelected"/>, which the game keeps sorted by how much a
     /// hero can take: a row per slot, the hero (Enter opens the card) and its Unhire button), and the
-    /// rest: the re-roll line and button, Start once three are hired, Help and Pause. On a later visit
+    /// rest: Start once three are hired, Help and Pause; Escape is Pause. On a later visit
     /// (<see cref="Tavern.eTavernStates.FreeDecision"/>) it is the game's buttons (the four drinks,
     /// Talk, Leave) and the gold. Every hero carries the hero and items buffers.
     /// </summary>
     public sealed class TavernScreen : SceneScreen<Tavern>
     {
         public override string Key => "game.tavern";
+
+        protected override tk2dButton PauseButton(Tavern game) => game.v_Button_Pause;
 
         // Live over the whole scene, so the walks in and out (the heroes to the table, the campaign's
         // NPC, entering and leaving) are quiet: nothing to press then, and nothing listed.
@@ -51,6 +54,14 @@ namespace PixelHeroesAccess.Module.Screens
                         () => game.EventSelectHero(hero), tavern: true));
                 }
             }
+            // The re-roll replaces these heroes: its line (how many are left) and button close the stop.
+            var reroll = game.v_Container_Reroll;
+            if (reroll != null && reroll.gameObject.activeInHierarchy)
+            {
+                b.AddItem(ControlId.Structural("tavern:reroll:text"), GameNodes.Text(() => GameText.Of(reroll.GetAText(0))));
+                var button = reroll.GetAButton(1);
+                if (button != null) b.AddItem(ControlId.Structural("tavern:reroll"), GameNodes.Button(button));
+            }
             b.PopContext();
 
             b.BeginStop("tavern:party");
@@ -72,13 +83,6 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("tavern:menu");
             b.PushContext(null, null);
-            var reroll = game.v_Container_Reroll;
-            if (reroll != null && reroll.gameObject.activeInHierarchy)
-            {
-                b.AddItem(ControlId.Structural("tavern:reroll:text"), GameNodes.Text(() => GameText.Of(reroll.GetAText(0))));
-                var button = reroll.GetAButton(1);
-                if (button != null) b.AddItem(ControlId.Structural("tavern:reroll"), GameNodes.Button(button));
-            }
             if (GameNodes.IsShown(game.v_Button_Start))
                 b.AddItem(ControlId.Structural("tavern:start"), GameNodes.Button(game.v_Button_Start));
             AddIfShown(b, "tavern:help", game.v_Button_Help);

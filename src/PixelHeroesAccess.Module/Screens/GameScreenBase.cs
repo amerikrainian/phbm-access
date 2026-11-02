@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using PixelHeroesAccess.Core.Strings;
 using PixelHeroesAccess.Core.UI;
 using PixelHeroesAccess.Module.Interop;
+using PixelHeroesAccess.Module.UI;
 using Screen = PixelHeroesAccess.Core.Screens.Screen;
 
 namespace PixelHeroesAccess.Module.Screens
@@ -36,7 +37,25 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override IEnumerable<ElementAction> GetActions()
         {
-            yield return new ElementAction(ActionIds.Back, Strings.Get("bind.ui.back"), _ => GenericScreen.Cancel());
+            yield return new ElementAction(ActionIds.Back, Strings.Get("bind.ui.back"), _ => Back());
+        }
+
+        /// <summary>The scene's pause button, or null where it has none (the title menu, the arena's
+        /// own screens, those whose cancel already leaves).</summary>
+        protected virtual tk2dButton PauseButton(T game) => null;
+
+        /// <summary>Whether the game's cancel has something to do in the scene as it stands. Over the
+        /// uncovered scene most cancels have nothing left (they close popups, which cover it).</summary>
+        protected virtual bool CancelActs(T game) => false;
+
+        /// <summary>Escape: the game's cancel; where that has nothing to do, the pause button, as the
+        /// pad's Start does on these scenes.</summary>
+        protected void Back()
+        {
+            var game = Game;
+            var pause = game != null && !CancelActs(game) ? PauseButton(game) : null;
+            if (GameNodes.Usable(pause)) pause.TriggerClick();
+            else GenericScreen.Cancel();
         }
     }
 

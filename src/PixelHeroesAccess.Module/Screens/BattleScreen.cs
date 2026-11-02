@@ -42,6 +42,21 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override string Key => "game.battle";
 
+        protected override tk2dButton PauseButton(BattleLogic game)
+            => game.v_BattleGUI != null && game.v_BattleGUI.v_Buttons != null && game.v_BattleGUI.v_Buttons.Length > 1 ? game.v_BattleGUI.v_Buttons[1] : null;
+
+        // BattleGUI.EventControllerInputButtonCancelDown: the loot, the throw-away popup, the log page, a
+        // hand waiting for its target.
+        protected override bool CancelActs(BattleLogic game)
+        {
+            var gui = game.v_BattleGUI;
+            if (gui == null) return false;
+            return (gui.v_Lootscreen != null && gui.v_Lootscreen.IsActive())
+                || (gui.v_Popup_SwitchFist != null && gui.v_Popup_SwitchFist.IsActiveAndNotMoving())
+                || gui.mLogScreenModus
+                || gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget;
+        }
+
         private static BattleGUI Gui => Game != null ? Game.v_BattleGUI : null;
 
         // The loot screen is drawn over the fight; it is its own screen.
@@ -196,7 +211,7 @@ namespace PixelHeroesAccess.Module.Screens
                 var gui = Gui;
                 if (gui != null && gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget)
                     gui.SetGUIToNewState(BattleGUI.eBattleStates.PlayerSelectedNothing);
-                else GenericScreen.Cancel();
+                else Back();
             });
         }
 

@@ -228,10 +228,9 @@ namespace PixelHeroesAccess.Tests
             }
         }
 
-        // A wrapping screen laid out as a single Tab-stop (the Dimensional Portal).
+        // A screen laid out as a single Tab-stop.
         private sealed class OneStopScreen : Screen
         {
-            public OneStopScreen() { Wrap = true; }
             public override string Key => "test.onestop";
             public override bool IsActive() => true;
             public override void Build(GraphBuilder b)
@@ -245,8 +244,42 @@ namespace PixelHeroesAccess.Tests
             }
         }
 
+        // Two stops of one item each.
+        private sealed class TwoStopScreen : Screen
+        {
+            public override string Key => "test.twostop";
+            public override bool IsActive() => true;
+            public override void Build(GraphBuilder b)
+            {
+                foreach (var item in new[] { "First", "Second" })
+                {
+                    b.BeginStop(item);
+                    b.AddItem(ControlId.Structural(item), new NodeVtable
+                    {
+                        Announcements = new[] { new NodeAnnouncement(() => item, kind: AnnouncementKinds.Label) },
+                    });
+                }
+            }
+        }
+
         [Fact]
-        public void TabOnAWrappingScreenWithOneStopSaysNothing()
+        public void TabWrapsBothWays()
+        {
+            var input = new FakeNavInput { FrameCount = 1 };
+            NavInput.Current = input;
+            var nav = new GraphNavigator();
+            nav.Attach(new TwoStopScreen());
+            nav.EnsureFocus();
+            Assert.Equal(ControlId.Structural("First"), nav.FocusedNodeId);
+
+            Assert.True(nav.OnInputJustPressed(Action(UiActions.Prev)));
+            Assert.Equal(ControlId.Structural("Second"), nav.FocusedNodeId);
+            Assert.True(nav.OnInputJustPressed(Action(UiActions.Next)));
+            Assert.Equal(ControlId.Structural("First"), nav.FocusedNodeId);
+        }
+
+        [Fact]
+        public void TabWithOneStopSaysNothing()
         {
             var spoken = new List<string>();
             var input = new FakeNavInput { FrameCount = 1 };

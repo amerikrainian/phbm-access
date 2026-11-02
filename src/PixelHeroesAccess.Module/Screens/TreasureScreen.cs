@@ -27,6 +27,9 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override string Key => "game.treasure";
 
+        protected override tk2dButton PauseButton(RoomTreasure game) => game.v_MenuButtons != null && game.v_MenuButtons.Length > 2 ? game.v_MenuButtons[2] : null;
+        protected override bool CancelActs(RoomTreasure game) => game.v_Lootscreen != null && game.v_Lootscreen.IsActive();
+
         public override void OnPop() => _message = null;
 
         public override void OnUpdate()

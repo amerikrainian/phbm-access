@@ -33,6 +33,8 @@ namespace PixelHeroesAccess.Module.Screens
     {
         public override string Key => "game.inventory";
 
+        protected override tk2dButton PauseButton(Inventory game) => game.v_ButtonPause;
+
         public override void Build(GraphBuilder b)
         {
             var inv = Game;

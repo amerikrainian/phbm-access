@@ -29,6 +29,9 @@ namespace PixelHeroesAccess.Module.Screens
     {
         public override string Key => "game.town";
 
+        protected override tk2dButton PauseButton(Town game) => game.v_Button_Pause;
+        protected override bool CancelActs(Town game) => game.v_Lootscreen != null && game.v_Lootscreen.IsActive();
+
         public override void Build(GraphBuilder b)
         {
             var town = Game;

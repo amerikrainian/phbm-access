@@ -16,6 +16,8 @@ namespace PixelHeroesAccess.Module.Screens
     {
         public override string Key => "game.library";
 
+        protected override tk2dButton PauseButton(Library game) => game.v_Button_Pause;
+
         public override void Build(GraphBuilder b)
         {
             var library = Game;

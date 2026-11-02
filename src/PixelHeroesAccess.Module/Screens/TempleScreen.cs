@@ -25,6 +25,9 @@ namespace PixelHeroesAccess.Module.Screens
     {
         public override string Key => "game.temple";
 
+        protected override tk2dButton PauseButton(Temple game) => game.v_ButtonPause;
+        protected override bool CancelActs(Temple game) => game.mState == Temple.eStates.PotionShop || game.mState == Temple.eStates.ReviveDialog;
+
         public override void Build(GraphBuilder b)
         {
             var temple = Game;

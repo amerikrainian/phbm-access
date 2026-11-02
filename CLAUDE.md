@@ -257,9 +257,10 @@ popups 10, the rename popup 12, the mod menu 50.
 ## Keys
 Focus mode is on at launch; Ctrl+Shift+A toggles it. F1 is the key help: the keys that do something
 RIGHT NOW (a handler key silent somewhere says so with `.When(...)`). Ctrl+Shift+M the mod menu.
-Arrows navigate, Tab/Shift+Tab cycle stops, Enter activates, Backspace is the secondary action,
-Escape backs out, Home/End jump, Alt+Up/Down jump sections, letters search the focused stop,
-Ctrl+arrows review the buffers. In a run (`UI/RunGlance`, Global category, live only where the line
+Arrows navigate, Tab/Shift+Tab cycle stops (always wrapping; silent with one stop), Enter activates,
+Backspace is the secondary action, Escape backs out (the game's cancel; on a scene where that has
+nothing to do, `SceneScreen.PauseButton`/`CancelActs`, the pause button), Home/End jump,
+Alt+Up/Down jump sections, letters search the focused stop, Ctrl+arrows review the buffers. In a run (`UI/RunGlance`, Global category, live only where the line
 exists): Ctrl+H the party's health, Ctrl+G the gold, Ctrl+Q the quest under way. Every action
 carries a gamepad binding too (`ControllerBinding`). The mod menu's All keys rebinds any of them.
 
