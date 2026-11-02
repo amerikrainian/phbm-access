@@ -273,8 +273,8 @@ carries a gamepad binding too (`ControllerBinding`). The mod menu's All keys reb
 Ctrl+Left/Right switch buffers, Ctrl+Up/Down step lines; empty buffers are skipped; a focus change
 re-homes review to the control's buffer. **control** (the focused node's head line, then its
 details: an item's facts, `ItemLines`; then the help's entry for each status, element and
-Redemption the lines name, `Nodes/Definitions`, also closing the hero buffer and an enemy's),
-**hero** and **items** (`NodeVtable.SideLines`: the hero a control concerns, whole,
+Redemption the lines name, `Nodes/Definitions`, also closing the hero buffer and an enemy's
+statuses), **hero** and **items** (`NodeVtable.SideLines`: the hero a control concerns, whole,
 `HeroLines.Lines`, and its equipment and skills a line per slot), **log** (the fight's narration
 and the rewards, newest first).
 
@@ -304,5 +304,5 @@ tick (one static field; the game raises nothing when it changes). `lang/en.txt` 
 - No manual (`docs_src`) yet.
 - The splash screen's tip is not read (on PC it passes by itself).
 - The library has no screen of its own (the fallback reads its choice; talk and shop are covered).
-- Enemy skills and defenses are not exposed (the game shows neither); an enemy's element is in its
-  control buffer.
+- Enemy skills, defenses and elements are not exposed (the game shows none of them; an element shows
+  only as Strong, Weak or Absorbed on a hit, which the narration says).
