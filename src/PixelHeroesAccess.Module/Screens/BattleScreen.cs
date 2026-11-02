@@ -20,8 +20,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// acted last turn, the game's rule that a hero may not act two turns running), then its two
     /// hands' items and its two skills, each "item summary, range" with a skill's cooldown. The game
     /// shows hands or skills at a time (a toggle per hero); here all four are listed and the toggle is
-    /// set as needed. A stunned hero's one action is breaking free. Then the enemies from the front,
-    /// each "1, Creepy Crawler 2, Healthy": its place (what a range counts: range 1-2 reaches the
+    /// set as needed. A stunned hero's one action is breaking free. Then the enemies as one row from
+    /// the front, each "1, Creepy Crawler 2, Healthy": its place (what a range counts: range 1-2 reaches the
     /// first two whoever strikes), its name, the game's condition word (the game shows enemies' health
     /// only as Healthy, Wounded or Critical, and nothing for a boss), its statuses. Enter on an action
     /// selects it as clicking its slot does (<see cref="BattleGUI.SelectHand"/>): the game checks the
@@ -190,6 +190,9 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.SetRegion("battle:enemies");
             b.PushContext(Strings.BattleEnemies, Strings.RoleList, positions: false);
+            // One row, front to back as they stand; entered on the first target while an attack waits
+            // for one, else on the front enemy.
+            b.StartRow("battle:enemies", FirstEnemyTarget);
             for (int e = 0; e < game.pEnemies.Length; e++)
             {
                 var enemy = game.pEnemies[e];
@@ -201,6 +204,7 @@ namespace PixelHeroesAccess.Module.Screens
                 vt.QuietVanish = true;
                 b.AddItem(CharacterId(slot), vt);
             }
+            b.EndRow();
             b.PopContext();
 
             b.BeginStop("battle:menu");
@@ -381,6 +385,25 @@ namespace PixelHeroesAccess.Module.Screens
                 : range == eRanges.OffensiveAll || range == eRanges.DefensiveAll ? Strings.BattleAll
                 : Strings.BattleTarget;
             return mark + ", " + label;
+        }
+
+        // The enemies row's entry: the place in the row (living enemies only) of the first an attack
+        // may strike, else the front.
+        private static int FirstEnemyTarget()
+        {
+            var game = Game;
+            var gui = Gui;
+            if (game == null || gui == null || gui.mSelectedHand == null || !gui.mSelectedHand.IsOffensive()
+                || gui.mBattleState != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget) return 0;
+            int place = 0;
+            for (int e = 0; e < game.pEnemies.Length; e++)
+            {
+                var enemy = game.pEnemies[e];
+                if (enemy == null || !enemy.IsAlive()) continue;
+                if (IsTarget(3 + e)) return place;
+                place++;
+            }
+            return 0;
         }
 
         private static void StrikeOrRefuse(int slot)
