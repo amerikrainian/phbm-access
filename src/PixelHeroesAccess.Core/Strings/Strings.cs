@@ -497,7 +497,7 @@ namespace PixelHeroesAccess.Core.Strings
             // At the level cap; {1} = the game's "Maximum Level".
             D("hero.xp_max", "experience {0}, {1}"),
             // Unspent level-up points.
-            D("hero.points", "{0} attribute points to spend"),
+            D("hero.points", "points to spend: {0}"),
             // What one level-up point adds to each attribute; {0} = "Life 3, Strength 2, ...".
             D("hero.per_point", "per point: {0}"),
             // A status on a character: {0} = its name, {1} = turns left.
@@ -625,6 +625,12 @@ namespace PixelHeroesAccess.Core.Strings
             D("room.next", "room {0} of {1}, the boss in the last"),
             // A hero's chance to open a treasure (the game prints this in English only).
             D("treasure.chance", "{0}% chance"),
+            // The help's element relations, which the game draws as a diagram: {0} = an element, {1} = the one it beats, {2} = the one it loses to.
+            D("help.element", "{0}: strong against {1}, weak against {2}"),
+            // {0} = the game's "Absorbed!".
+            D("help.element_same", "the same element: {0}"),
+            // {0} = Neutral.
+            D("help.element_neutral", "{0}: no strength or weakness"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -1001,5 +1007,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string BattleBegins(string enemies) => F("battle.begins", enemies);
         public static string RoomNext(string number, string total) => F("room.next", number, total);
         public static string TreasureChance(string percent) => F("treasure.chance", percent);
+        public static string HelpElement(string element, string beats, string loses) => F("help.element", element, beats, loses);
+        public static string HelpElementSame(string absorbed) => F("help.element_same", absorbed);
+        public static string HelpElementNeutral(string neutral) => F("help.element_neutral", neutral);
     }
 }

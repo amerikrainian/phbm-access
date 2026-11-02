@@ -77,9 +77,15 @@ namespace PixelHeroesAccess.Module.Screens
                     for (int a = 0; a < (int)eHeroAttributes.COUNT; a++)
                     {
                         var attribute = (eHeroAttributes)a;
-                        b.AddItem(ControlId.Structural("inv:points:" + index + ":" + a), GameNodes.Button(
+                        var vt = GameNodes.Button(
                             () => AttributeLabel(Hero(index), attribute), () => Raise(index, attribute),
-                            () => Hero(index) != null && Hero(index).GetSkillPointsCurrent() > 0));
+                            () => Hero(index) != null && Hero(index).GetSkillPointsCurrent() > 0);
+                        // The last point spent, the row goes: on to the next hero with points, else
+                        // back to this hero in the party.
+                        int column = a;
+                        vt.VanishTo = () => AfterPoints(index, column);
+                        vt.QuietVanish = true;
+                        b.AddItem(ControlId.Structural("inv:points:" + index + ":" + a), vt);
                     }
                     b.EndRow();
                     b.PopContext();
@@ -109,6 +115,20 @@ namespace PixelHeroesAccess.Module.Screens
             b.AddItem(ControlId.Structural("inv:gold"), GameNodes.Text(TavernScreen.GoldLine));
             b.AddItem(ControlId.Structural("inv:backpack:count"), GameNodes.Text(ShopScreen.BackpackLine));
             b.PopContext();
+        }
+
+        private static ControlId AfterPoints(int index, int column)
+        {
+            var inv = Game;
+            if (inv != null)
+                for (int i = 1; i <= inv.pHeroes.Length; i++)
+                {
+                    int next = (index + i) % inv.pHeroes.Length;
+                    var hero = inv.pHeroes[next];
+                    if (next != index && hero != null && hero.GetSkillPointsCurrent() > 0)
+                        return ControlId.Structural("inv:points:" + next + ":" + column);
+                }
+            return ControlId.Structural("inv:hero:" + index);
         }
 
         private static CharacterHero Hero(int index)

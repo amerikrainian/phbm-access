@@ -224,6 +224,8 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.OverlandScreen());
             ScreenManager.Register(new Screens.RoomOverviewScreen());
             ScreenManager.Register(new Screens.TreasureScreen());
+            ScreenManager.Register(new Screens.GameHelpScreen());
+            ScreenManager.Register(new Screens.QuestLogScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }
