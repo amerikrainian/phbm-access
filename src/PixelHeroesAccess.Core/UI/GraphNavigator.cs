@@ -404,6 +404,7 @@ namespace PixelHeroesAccess.Core.UI
             if (_graph == null || !_graph.Rerender()) return;
             var node = _graph.CurrentNode;
             if (node == null) return;
+            _quietLandingUntil = int.MinValue / 2; // this is the landing's reading
             Speak(GraphAnnouncer.LeafText(node), interrupt);
             _lastSpokenKey = node.Id;
             _lastSpokenNode = node;

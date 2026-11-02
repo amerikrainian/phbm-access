@@ -303,13 +303,9 @@ namespace PixelHeroesAccess.Core.Strings
             // An attribute to raise: {0} = its name, {1} = its value, {2} = what a point adds.
             D("inventory.attribute", "{0} {1}, +{2} per point"),
             // An item equipped: {0} = the item, {1} = the hero, {2} = the slot.
-            D("inventory.equipped", "{0} on {1}, {2}"),
             // An item taken off.
-            D("inventory.unequipped", "{0} to the backpack"),
             // An item destroyed.
-            D("inventory.trashed", "{0} thrown away"),
             // A hero moved in the line: {0} = the hero, {1} = the new place.
-            D("inventory.swapped", "{0} now in place {1}"),
             // A hero menu's option.
             D("inventory.swap_with", "swap with {0}, place {1}"),
             // An equipped hand item's option: {0} = the other hand.
@@ -673,10 +669,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string LootContinue => Get("loot.continue");
         public static string InventoryLevelUp => Get("inventory.level_up");
         public static string InventoryAttribute(string name, string value, string gain) => F("inventory.attribute", name, value, gain);
-        public static string InventoryEquipped(string item, string hero, string slot) => F("inventory.equipped", item, hero, slot);
-        public static string InventoryUnequipped(string item) => F("inventory.unequipped", item);
-        public static string InventoryTrashed(string item) => F("inventory.trashed", item);
-        public static string InventorySwapped(string hero, string place) => F("inventory.swapped", hero, place);
         public static string InventorySwapWith(string hero, string place) => F("inventory.swap_with", hero, place);
         public static string InventoryMoveTo(string slot) => F("inventory.move_to", slot);
         public static string InventoryToBackpack => Get("inventory.to_backpack");

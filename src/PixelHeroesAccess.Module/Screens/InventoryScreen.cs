@@ -207,7 +207,7 @@ namespace PixelHeroesAccess.Module.Screens
             if (!Pick(inv, hero, item)) return;
             inv.mDragAndDropItemIsFromBackpack = inv.pItemsBackpack.Contains(item);
             Drop(inv, SlotTargets[slot]);
-            Speech.Say(Strings.InventoryEquipped(ItemLines.Name(item), GameText.Line(hero.GetName()), HeroLines.SlotName(slot)), interrupt: true);
+            Done();
         }
 
         private static void Unequip(CharacterHero hero, Item item)
@@ -215,17 +215,16 @@ namespace PixelHeroesAccess.Module.Screens
             var inv = Game;
             if (inv == null || hero == null || item == null || !Pick(inv, hero, item)) return;
             Drop(inv, Inventory.eDragAndDropState.eOverBackpack, inv.pItemsBackpack.Count);
-            Speech.Say(Strings.InventoryUnequipped(ItemLines.Name(item)), interrupt: true);
+            Done();
         }
 
         private static void Trash(CharacterHero hero, Item item)
         {
             var inv = Game;
             if (inv == null || item == null) return;
-            string name = ItemLines.Name(item);
             if (!Pick(inv, hero ?? inv.mSelectedHero, item)) return;
             Drop(inv, Inventory.eDragAndDropState.eOverTrash);
-            if (inv.mSelectedItem == null) Speech.Say(Strings.InventoryTrashed(name), interrupt: true);
+            if (inv.mSelectedItem == null) Done();
         }
 
         private static void Drink(Item potion, CharacterHero hero)
@@ -258,7 +257,17 @@ namespace PixelHeroesAccess.Module.Screens
             if (inv == null || a == null || b == null || from == to) return;
             if (inv.mSelectedHero != a) inv.SelectHero(a);
             inv.DragDropHeroEventDrop(b.gameObject);
-            Speech.Say(Strings.InventorySwapped(GameText.Line(a.GetName()), (to + 1).ToString()), interrupt: true);
+            Done();
+        }
+
+        // A move done: the control focus now rests on is read (the next item where the moved one left
+        // its list, the slot it left), once the menu that asked has closed. What happened is not said:
+        // the player chose it.
+        private static void Done()
+        {
+            // The return from the menu would re-read the control first.
+            Navigation.QuietNextLanding();
+            Later.Frames(2, () => Navigation.AnnounceFocused(interrupt: true), "inventory move");
         }
 
         // ---- the menus ----
