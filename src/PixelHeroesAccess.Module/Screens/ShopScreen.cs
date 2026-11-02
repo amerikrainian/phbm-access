@@ -19,7 +19,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// on one tab, the selected hero's equipment on the other), then Buy or Sell. Here an item is one
     /// press. The stock: each offer "summary, price", with "not enough gold" when the party cannot
     /// pay; Enter buys it. The backpack: each item with what it sells for (potions are not sold, as
-    /// in the game); Enter sells it. The equipment: each hero's slots, Enter sells what is in one.
+    /// in the game); Enter sells it. The equipment: a row per hero of its five slots (as in the
+    /// inventory), Enter sells what is in one.
     /// Then the shop's buttons (Inventory, Close, Help), the gold and the backpack count against its
     /// limit (the game lets a purchase exceed it; only leaving town is then refused). Every press
     /// goes through the game: the tab, the hero and the item selected as clicks select them, then the
@@ -78,20 +79,24 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("shop:equipment");
             b.PushContext(GameText.Tr(ET.GUI_SH_B_Equiptment), Strings.RoleList);
+            // A row per hero of the five slots, as the inventory has them; one row key, so Up and Down
+            // keep the slot. A sold item leaves its slot empty in place.
             if (screen.pHeroes != null)
                 foreach (var member in screen.pHeroes)
                 {
                     if (member == null) continue;
                     var hero = member;
+                    b.PushContext(GameText.Line(hero.GetName()), null, positions: false);
+                    b.StartRow("shop:equipment:row");
                     for (int s = 0; s < 5; s++)
                     {
                         int slot = s;
-                        var item = Equipped(hero, slot);
-                        if (item == null) continue;
-                        b.AddItem(ControlId.Structural(("shop:equipment", (object)item)), Quiet(HeroNodes.Item(() => Equipped(hero, slot), () => hero,
+                        b.AddItem(ControlId.Structural(("shop:equipment", (object)hero, slot)), Quiet(HeroNodes.Item(() => Equipped(hero, slot), () => hero,
                             () => SellEquipped(hero, Equipped(hero, slot)),
-                            () => GameText.Line(hero.GetName()) + ", " + Strings.SlotLine(HeroLines.SlotName(slot), SellLabel(Equipped(hero, slot), hero)))));
+                            () => Strings.SlotLine(HeroLines.SlotName(slot), SellLabel(Equipped(hero, slot), hero)))));
                     }
+                    b.EndRow();
+                    b.PopContext();
                 }
             b.PopContext();
 
