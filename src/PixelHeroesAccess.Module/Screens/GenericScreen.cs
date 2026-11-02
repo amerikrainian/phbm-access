@@ -28,7 +28,7 @@ namespace PixelHeroesAccess.Module.Screens
         public override string Key => "game.generic";
         public override int Layer => -10;
 
-        public override bool IsActive() => ScreenBase.pCurrentInstance != null;
+        public override bool IsActive() => ScreenBase.pCurrentInstance != null && !GameScreens.ShopPending();
 
         public override void OnUpdate()
         {

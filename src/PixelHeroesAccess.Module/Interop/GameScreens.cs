@@ -39,6 +39,17 @@ namespace PixelHeroesAccess.Module.Interop
         public static Shop OpenShop()
             => Shop.pActiveShop != null ? Shop.pActiveShop.GetComponent<Shop>() : null;
 
+        /// <summary>A return from the inventory to a shop: the inventory's Shop button changes scene to the
+        /// shop's (the town, the library, the arena hub), whose first update opens the shop again
+        /// (<see cref="ScreenBase.pSwitchedFromShopScene"/>, consumed there). Until then the scene is
+        /// only passed through, and no screen of ours reads it. The inventory reads the same mark for
+        /// its Shop button, so only those three scenes count it.</summary>
+        public static bool ShopPending()
+        {
+            var screen = ScreenBase.pCurrentInstance;
+            return ScreenBase.pSwitchedFromShopScene != eScenes.COUNT && (screen is Town || screen is Library || screen is ArenaHub);
+        }
+
         /// <summary>The root the game's buttons are live under right now: the topmost popup, else the
         /// open shop, else the scene's screen. Null between scenes.</summary>
         public static Transform InputRoot()

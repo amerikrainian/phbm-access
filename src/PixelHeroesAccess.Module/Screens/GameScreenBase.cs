@@ -31,9 +31,10 @@ namespace PixelHeroesAccess.Module.Screens
         }
 
         /// <summary>Whether something of the game's sits over the scene: a popup, the shop, the talk box
-        /// (each its own screen of ours, or the generic one).</summary>
+        /// (each its own screen of ours, or the generic one), or a shop about to open over it.</summary>
         protected virtual bool Covered(T game)
-            => Popup.GetTopMostActivePopup() != null || Shop.pActiveShop != null || Talkbox.pActiveTalkbox != null;
+            => Popup.GetTopMostActivePopup() != null || Shop.pActiveShop != null || Talkbox.pActiveTalkbox != null
+                || GameScreens.ShopPending();
 
         public override IEnumerable<ElementAction> GetActions()
         {
