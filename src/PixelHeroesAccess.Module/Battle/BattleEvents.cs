@@ -61,9 +61,11 @@ namespace PixelHeroesAccess.Module.Battle
                 var bCharacter = __0;
                 try
                 {
-                    var lines = new List<string>();
-                    new LogscreenEntryStunned(bCharacter).GenerateMessage(ref lines);
-                    Report(Speakable(lines));
+                    // The game's entry (LogscreenEntryStunned) is the name, " breaks free from being
+                    // stunned", then the Stunned icon, which read as a word says it twice: the same
+                    // text without the icon, an enemy by its numbered name as the rest of the fight.
+                    string name = bCharacter is CharacterHero hero ? GameText.Line(hero.GetName()) : Screens.BattleScreen.EnemyName(bCharacter);
+                    Report(GameText.Line(name + GameText.Tr(ET.MessageBattleStunned)) + ".");
                 }
                 catch (Exception e) { CoreLog.Warning("BattleEvents: stun log failed: " + e); }
             }
