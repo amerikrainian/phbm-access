@@ -24,7 +24,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// Then the shop's buttons (Inventory, Close, Help), the gold and the backpack count against its
     /// limit (the game lets a purchase exceed it; only leaving town is then refused). Every press
     /// goes through the game: the tab, the hero and the item selected as clicks select them, then the
-    /// Buy/Sell button's own click, so its checks hold; the result is said a few frames on.
+    /// Buy/Sell button's own click, so its checks hold; a few frames on, the gold and the control focus
+    /// now rests on are said.
     /// </summary>
     public sealed class ShopScreen : Screen
     {
@@ -167,9 +168,8 @@ namespace PixelHeroesAccess.Module.Screens
                 Speech.Say(Strings.ShopTooExpensive, interrupt: true);
                 return;
             }
-            string name = ItemLines.Name(item);
             shop.EventSelectItem(item);
-            Press(shop, () => shop.mItemsShopStock != null && !shop.mItemsShopStock.Contains(item), Strings.ShopBought(name));
+            Press(shop, () => shop.mItemsShopStock != null && !shop.mItemsShopStock.Contains(item));
         }
 
         private static void SellFromBackpack(Item item)
@@ -177,25 +177,24 @@ namespace PixelHeroesAccess.Module.Screens
             var shop = ShopOpen;
             if (shop == null || item == null) return;
             if (item.GetItemType() == eItemTypes.Potion) { Speech.Say(Strings.ShopNotForSale, interrupt: true); return; }
-            string name = ItemLines.Name(item);
             if (!shop.mDisplayBackpack) shop.EventButtonTabBackpack();
             shop.EventSelectItem(item);
-            Press(shop, () => shop.mItemsShopStock != null && shop.mItemsShopStock.Contains(item), Strings.ShopSold(name));
+            Press(shop, () => shop.mItemsShopStock != null && shop.mItemsShopStock.Contains(item));
         }
 
         private static void SellEquipped(CharacterHero hero, Item item)
         {
             var shop = ShopOpen;
             if (shop == null || hero == null || item == null) return;
-            string name = ItemLines.Name(item);
             if (shop.mDisplayBackpack) shop.EventButtonTabEquipment();
             if (shop.mSelectedHero != hero) shop.EventSelectHero(hero);
             shop.EventSelectItem(item);
-            Press(shop, () => shop.mItemsShopStock != null && shop.mItemsShopStock.Contains(item), Strings.ShopSold(name));
+            Press(shop, () => shop.mItemsShopStock != null && shop.mItemsShopStock.Contains(item));
         }
 
-        // The Buy/Sell button's own click, if the selection took; then the outcome and the gold.
-        private static void Press(Shop shop, System.Func<bool> done, string success)
+        // The Buy/Sell button's own click, if the selection took; then the gold and whatever focus now
+        // rests on (the next item where the one dealt in left its list, the slot emptied in place).
+        private static void Press(Shop shop, System.Func<bool> done)
         {
             var button = shop.v_ButtonBuySell;
             if (shop.mSelectedItem == null || !GameNodes.Usable(button))
@@ -206,7 +205,11 @@ namespace PixelHeroesAccess.Module.Screens
             button.TriggerClick();
             Later.Frames(2, () =>
             {
-                if (done()) Speech.Say(success + ", " + TavernScreen.GoldLine(), interrupt: true);
+                if (done())
+                {
+                    Speech.Say(TavernScreen.GoldLine(), interrupt: true);
+                    Navigation.AnnounceFocused();
+                }
                 else Speech.Say(Strings.ShopRefused, interrupt: true);
             }, "shop result");
         }

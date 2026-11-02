@@ -399,6 +399,17 @@ namespace PixelHeroesAccess.Core.UI
             _lastSpokenNode = node;
         }
 
+        public override void AnnounceFocused(bool interrupt = false)
+        {
+            if (_graph == null || !_graph.Rerender()) return;
+            var node = _graph.CurrentNode;
+            if (node == null) return;
+            Speak(GraphAnnouncer.LeafText(node), interrupt);
+            _lastSpokenKey = node.Id;
+            _lastSpokenNode = node;
+            _reannounce = false;
+        }
+
         // ---- input ----
 
         public override bool OnInputJustPressed(InputAction action)

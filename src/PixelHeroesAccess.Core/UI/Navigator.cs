@@ -56,6 +56,10 @@ namespace PixelHeroesAccess.Core.UI
         /// (the screen answered a key), queued otherwise.</summary>
         public abstract void AnnounceCurrent(bool interrupt = false);
 
+        /// <summary>Speak the focused control alone, without its list or context: the control that
+        /// took the place of one an action removed (a bought item's neighbour).</summary>
+        public virtual void AnnounceFocused(bool interrupt = false) { }
+
         /// <summary>A screen closed (stack pop without <see cref="Screen.KeepStateOnPop"/>, or a child
         /// page removed): drop its per-screen state so reopening starts fresh.</summary>
         public virtual void ScreenClosed(Screen screen) { }
@@ -120,6 +124,8 @@ namespace PixelHeroesAccess.Core.UI
         public static void TickTypeahead() => Active?.TickTypeahead();
 
         public static void AnnounceCurrent(bool interrupt = false) => Active?.AnnounceCurrent(interrupt);
+
+        public static void AnnounceFocused(bool interrupt = false) => Active?.AnnounceFocused(interrupt);
 
         public static bool WouldHandle(InputAction action) => Active != null && Active.WouldHandle(action);
 

@@ -270,8 +270,6 @@ namespace PixelHeroesAccess.Core.Strings
             // What an item fetches when sold; {0} = gold.
             D("shop.sells_for", "sells for {0}"),
             // Shop results; {0} = the item.
-            D("shop.bought", "bought {0}"),
-            D("shop.sold", "sold {0}"),
             // A purchase or sale the game did not make.
             D("shop.refused", "not possible"),
             // The fight's stops: the heroes and their actions, the targets of the chosen action, the enemies.
@@ -658,8 +656,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ShopTooExpensive => Get("shop.too_expensive");
         public static string ShopNotForSale => Get("shop.not_for_sale");
         public static string ShopSellsFor(string amount) => F("shop.sells_for", amount);
-        public static string ShopBought(string item) => F("shop.bought", item);
-        public static string ShopSold(string item) => F("shop.sold", item);
         public static string ShopRefused => Get("shop.refused");
         public static string BattleParty => Get("battle.party");
         public static string BattleTargets(string item) => F("battle.targets", item);
