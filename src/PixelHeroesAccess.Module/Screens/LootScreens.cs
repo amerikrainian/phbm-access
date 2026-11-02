@@ -43,23 +43,18 @@ namespace PixelHeroesAccess.Module.Screens
             return null;
         }
 
+        // Live until the reward screen is gone (it fades out after it finishes), so nothing under it
+        // speaks meanwhile; the landing on the summary says what was won.
         public override bool IsActive()
         {
             var loot = Current();
-            return loot != null && loot.IsActive() && !loot.IsFinished() && Popup.GetTopMostActivePopup() == null;
-        }
-
-        public override void OnPush()
-        {
-            var loot = Current();
-            if (loot != null && Loot.Last != null && ReferenceEquals(Loot.LastScreen, loot))
-                ScreenIntro.Say(Loot.Last.Summary);
+            return loot != null && loot.IsActive() && Popup.GetTopMostActivePopup() == null;
         }
 
         public override void Build(GraphBuilder b)
         {
             var loot = Current();
-            if (loot == null) return;
+            if (loot == null || loot.IsFinished()) return;
             b.PushContext(null, null);
             var won = ReferenceEquals(Loot.LastScreen, loot) ? Loot.Last : null;
             if (won != null)

@@ -613,6 +613,18 @@ namespace PixelHeroesAccess.Core.Strings
             // A backpack armor item's menu row: {0} = the slot it takes.
             D("inventory.equip_slot", "equip, {0}"),
             D("button.next_room", "Next room"),
+            // The road's destination: {0} = the dungeon.
+            D("road.to", "to {0}"),
+            // The road home.
+            D("road.to_town", "to town"),
+            // The next event on the road.
+            D("road.event", "event {0} of {1}"),
+            // A fight begins; {0} = the enemies.
+            D("battle.begins", "fight: {0}"),
+            // The dungeon room the party enters next: {0} = its number, {1} = the rooms in all.
+            D("room.next", "room {0} of {1}, the boss in the last"),
+            // A hero's chance to open a treasure (the game prints this in English only).
+            D("treasure.chance", "{0}% chance"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -983,5 +995,11 @@ namespace PixelHeroesAccess.Core.Strings
         public static string InventoryThrowAwayConfirm(string item) => F("inventory.throw_away_confirm", item);
         public static string InventoryEquipSlot(string slot) => F("inventory.equip_slot", slot);
         public static string ButtonNextRoom => Get("button.next_room");
+        public static string RoadTo(string place) => F("road.to", place);
+        public static string RoadToTown => Get("road.to_town");
+        public static string RoadEvent(string number, string total) => F("road.event", number, total);
+        public static string BattleBegins(string enemies) => F("battle.begins", enemies);
+        public static string RoomNext(string number, string total) => F("room.next", number, total);
+        public static string TreasureChance(string percent) => F("treasure.chance", percent);
     }
 }

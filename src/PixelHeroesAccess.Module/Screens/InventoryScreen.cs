@@ -330,3 +330,50 @@ namespace PixelHeroesAccess.Module.Screens
         }
     }
 }
+
+namespace PixelHeroesAccess.Module.Screens
+{
+    // The game declares a class named Action in the global namespace.
+    using Action = System.Action;
+
+    /// <summary>
+    /// The dungeon's room overview (<see cref="Inventory.v_Popup_RoomOverview"/>), which draws the rooms
+    /// as a row of pictures, the cleared ones marked and the next one moving: said as words, the
+    /// dungeon and "room 3 of 8, the boss in room 8" (eight rooms, the last the boss's:
+    /// <see cref="eDungeonRooms"/>), then the popup's buttons (Enter Room, Back, Quest Log).
+    /// </summary>
+    public sealed class RoomOverviewScreen : PopupScreen
+    {
+        public override string Key => "inventory.rooms";
+
+        private static Inventory Game => Interop.GameScreens.Current<Inventory>();
+
+        protected override Popup Resolve() => Game != null ? Game.v_Popup_RoomOverview : null;
+
+        public override void Build(Core.Graph.GraphBuilder b)
+        {
+            var inv = Game;
+            if (inv == null) return;
+            b.PushContext(null, null);
+            b.AddItem(Core.Graph.ControlId.Structural("rooms:where"), UI.GameNodes.Text(Where));
+            var buttons = Interop.GameScreens.LiveButtons(inv.v_Popup_RoomOverview.transform);
+            // Enter Room first: the reason the popup is open.
+            buttons.Sort((x, y) => (y.gameObject.name.Contains("Enter") ? 1 : 0) - (x.gameObject.name.Contains("Enter") ? 1 : 0));
+            foreach (var button in buttons)
+                b.AddItem(Core.Graph.ControlId.ForObject(button), UI.GameNodes.ForButton(button));
+            if (buttons.Count > 0) b.SetStart(Core.Graph.ControlId.ForObject(buttons[0]));
+            b.PopContext();
+        }
+
+        private static string Where()
+        {
+            var session = GameCore.pGameSession;
+            var dungeon = GameCore.GetCurrentDungeon();
+            string name = dungeon != null ? Interop.GameText.Line(dungeon.GetData().pName) : null;
+            if (session == null || GameCore.GetGameState() != eGameStates.eDungeon) return name;
+            int next = (int)session.pNextRoom + 1;
+            int total = (int)eDungeonRooms.COUNT;
+            return UI.GameNodes.Sentences(name, Core.Strings.Strings.RoomNext(next.ToString(), total.ToString()));
+        }
+    }
+}

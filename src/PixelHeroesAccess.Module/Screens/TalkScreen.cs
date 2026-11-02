@@ -33,6 +33,7 @@ namespace PixelHeroesAccess.Module.Screens
         private bool _haltHandled;
         private ControlId _firstChoice;
         private tk2dButton _firstChoiceButton;
+        private bool _firstChoiceIsOption;
 
         public override string Key => "game.talk";
         public override int Layer => 5;
@@ -65,7 +66,8 @@ namespace PixelHeroesAccess.Module.Screens
             bool options = box.mTalkMode == Talkbox.eTalkModes.eOverlandEvent && box.mOverlandEventState == Talkbox.eOverlandEventStates.Options;
             if (box.IsEndedAndHalted() || options)
             {
-                if (!_haltHandled && _firstChoice != null)
+                // Wait for a render that holds the options: the one before them names the menu's buttons.
+                if (!_haltHandled && _firstChoice != null && (!options || _firstChoiceIsOption))
                 {
                     _haltHandled = true;
                     // Silently, then queued: a move's readout interrupts, and the page may still be read.
@@ -108,6 +110,7 @@ namespace PixelHeroesAccess.Module.Screens
                 b.AddItem(ControlId.Structural("talk:event"), GameNodes.Text(() => GameText.Line(Box?.mOverlandEvent?.pIngameName)));
             }
             _firstChoice = null;
+            _firstChoiceIsOption = false;
             if (box.v_ButtonsOptions != null)
                 foreach (var option in box.v_ButtonsOptions)
                 {
@@ -115,7 +118,7 @@ namespace PixelHeroesAccess.Module.Screens
                     var vt = GameNodes.Button(option);
                     vt.QuietVanish = true;
                     var optionId = ControlId.ForObject(option);
-                    if (_firstChoice == null) { _firstChoice = optionId; _firstChoiceButton = option; }
+                    if (_firstChoice == null) { _firstChoice = optionId; _firstChoiceButton = option; _firstChoiceIsOption = true; }
                     b.AddItem(optionId, vt);
                 }
             // The scene's own buttons beside the talk (Accept and Refuse in town), not the talk box's

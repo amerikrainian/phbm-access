@@ -33,6 +33,11 @@ namespace PixelHeroesAccess.Module.Screens
     public sealed class BattleScreen : SceneScreen<BattleLogic>
     {
         private BattleGUI.eBattleStates _lastState = BattleGUI.eBattleStates.COUNT;
+        private BattleLogic _opened;
+
+        // Enemies sharing a name are numbered by their place when the fight began, per enemy, so a
+        // number holds when the game closes the ranks after a death. Identity, not game state.
+        private static readonly Dictionary<CharacterEnemy, int> _numbers = new Dictionary<CharacterEnemy, int>();
 
         public override string Key => "game.battle";
 
@@ -48,6 +53,13 @@ namespace PixelHeroesAccess.Module.Screens
         {
             var gui = Gui;
             if (gui == null) return;
+            // A new fight: who stands against the party, once, as it begins.
+            if (!ReferenceEquals(_opened, Game))
+            {
+                _opened = Game;
+                NumberEnemies();
+                BattleEvents.Report(Strings.BattleBegins(EnemyNames()));
+            }
             var state = gui.mBattleState;
             if (state == _lastState) return;
             var previous = _lastState;
@@ -166,6 +178,43 @@ namespace PixelHeroesAccess.Module.Screens
             });
         }
 
+        private static void NumberEnemies()
+        {
+            _numbers.Clear();
+            var game = Game;
+            if (game == null || game.pEnemies == null) return;
+            var counts = new Dictionary<string, int>();
+            foreach (var enemy in game.pEnemies)
+                if (enemy != null) counts[enemy.GetName()] = counts.TryGetValue(enemy.GetName(), out int n) ? n + 1 : 1;
+            var seen = new Dictionary<string, int>();
+            foreach (var enemy in game.pEnemies)
+            {
+                if (enemy == null || counts[enemy.GetName()] < 2) continue;
+                int k = seen.TryGetValue(enemy.GetName(), out int m) ? m + 1 : 1;
+                seen[enemy.GetName()] = k;
+                _numbers[enemy] = k;
+            }
+        }
+
+        /// <summary>An enemy's name, numbered when others of the fight share it ("Tiny Shroom 2").</summary>
+        public static string EnemyName(Character enemy)
+        {
+            if (enemy == null) return null;
+            string name = GameText.Line(enemy.GetName());
+            return enemy is CharacterEnemy e && _numbers.TryGetValue(e, out int n) ? name + " " + n : name;
+        }
+
+        // "Swarm of Bees, Creepy Crawler, Common Scorpion".
+        private static string EnemyNames()
+        {
+            var game = Game;
+            var names = new List<string>();
+            if (game != null && game.pEnemies != null)
+                foreach (var enemy in game.pEnemies)
+                    if (enemy != null && enemy.IsAlive()) names.Add(EnemyName(enemy));
+            return string.Join(", ", names);
+        }
+
         private static ControlId ActionId(int hero, int slot) => ControlId.Structural("battle:action:" + hero + ":" + slot);
 
         // An action of a hero: slot 0 and 1 the hands, 2 and 3 the skills.
@@ -275,7 +324,7 @@ namespace PixelHeroesAccess.Module.Screens
         {
             if (character == null) return null;
             if (character is CharacterHero hero) return HeroLabel(hero);
-            var parts = new List<string> { GameText.Line(character.GetName()), EnemyCondition(character) };
+            var parts = new List<string> { EnemyName(character), EnemyCondition(character) };
             string statuses = HeroLines.Statuses(character);
             if (statuses != null) parts.Add(statuses);
             return string.Join(", ", parts);
