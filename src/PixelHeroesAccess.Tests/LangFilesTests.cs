@@ -19,7 +19,7 @@ namespace PixelHeroesAccess.Tests
 
         /// <summary>The game's languages (<c>Options.eLanguages</c>: English and German) by the codes
         /// <c>LanguageSync.CurrentCode</c> gives them, English being the generated template.</summary>
-        private static readonly string[] Codes = { "en" };
+        private static readonly string[] Codes = { "de", "en" };
 
         public static IEnumerable<object[]> LanguageCodes() => Codes.Select(c => new object[] { c });
 

@@ -1,8 +1,8 @@
 # Pixel Heroes Access: the words the mod itself speaks (the game's own text is the game's).
 # This file is the template, generated from the mod's strings table: copy it to
-# <language>.txt, named for the game's language code (de-DE, es, fr-FR, ja, ko, pt-BR, ru,
-# zh-CN, zh-HK), and translate the values. key=value, one per line; keep every {0} slot (their
-# order is free); a missing key is spoken in English. The mod follows the game's language.
+# <language>.txt (the game speaks English and German: en, de), and translate the values.
+# key=value, one per line; keep every {0} slot (their order is free); a missing key is
+# spoken in English. The mod follows the game's language.
 app.loaded=Pixel Heroes Access {0} loaded
 app.module_failed=Pixel Heroes Access features failed to load
 app.update_available=update {0} available

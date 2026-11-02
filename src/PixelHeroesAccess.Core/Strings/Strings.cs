@@ -480,9 +480,9 @@ namespace PixelHeroesAccess.Core.Strings
         private const string TemplateHeader =
             "# Pixel Heroes Access: the words the mod itself speaks (the game's own text is the game's).\n" +
             "# This file is the template, generated from the mod's strings table: copy it to\n" +
-            "# <language>.txt, named for the game's language code (de-DE, es, fr-FR, ja, ko, pt-BR, ru,\n" +
-            "# zh-CN, zh-HK), and translate the values. key=value, one per line; keep every {0} slot (their\n" +
-            "# order is free); a missing key is spoken in English. The mod follows the game's language.\n";
+            "# <language>.txt (the game speaks English and German: en, de), and translate the values.\n" +
+            "# key=value, one per line; keep every {0} slot (their order is free); a missing key is\n" +
+            "# spoken in English. The mod follows the game's language.\n";
 
         /// <summary>The translator template (lang/en.txt): every key with its English default, one per
         /// line, under a header that tells a translator what to do with it.</summary>
