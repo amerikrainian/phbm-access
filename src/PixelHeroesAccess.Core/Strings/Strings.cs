@@ -653,6 +653,8 @@ namespace PixelHeroesAccess.Core.Strings
             D("arena.next", "next: {0}"),
             // The campaign won.
             D("campaign.victory", "victory"),
+            // The arena hub's start button (an icon).
+            D("arena.fight", "Fight"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -1043,5 +1045,6 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ArenaDismissed(string hero) => F("arena.dismissed", hero);
         public static string ArenaNext(string enemies) => F("arena.next", enemies);
         public static string CampaignVictory => Get("campaign.victory");
+        public static string ArenaFight => Get("arena.fight");
     }
 }

@@ -187,6 +187,12 @@ namespace PixelHeroesAccess.Module
                 .AddBinding(new KeyboardBinding(KeyCode.DownArrow, ctrl: true))
                 .AddBinding(new ControllerBinding(ControllerInput.RightStickDown)).Repeating();
 
+            // The run's read keys, on any screen of a run, focus unmoved: Ctrl and a letter, which
+            // type-ahead never takes.
+            Glance("run.party", "Party health", KeyCode.H, RunGlance.Party);
+            Glance("run.gold", "Gold", KeyCode.G, RunGlance.Gold);
+            Glance("run.quest", "Current quest", KeyCode.Q, RunGlance.Quest);
+
             // Global: always live, so the player can hand the keyboard back to the game and reclaim it.
             InputManager.Register("mod.focus", "Toggle navigation", InputCategory.Global, ToggleFocus)
                 .AddBinding(new KeyboardBinding(KeyCode.A, ctrl: true, shift: true))
@@ -198,6 +204,14 @@ namespace PixelHeroesAccess.Module
             InputManager.Register(HelpScreen.ActionKey, "Keys here", InputCategory.Global, HelpScreen.Toggle)
                 .AddBinding(new KeyboardBinding(KeyCode.F1))
                 .AddBinding(new ControllerBinding(ControllerInput.Back, ControllerInput.LeftTrigger));
+        }
+
+        // A read key: speaks its line, and is listed by the key help only where the line exists.
+        private static void Glance(string key, string label, KeyCode letter, Func<string> line)
+        {
+            InputManager.Register(key, label, InputCategory.Global, () => RunGlance.Say(line))
+                .AddBinding(new KeyboardBinding(letter, ctrl: true))
+                .When(() => FocusMode.Active && RunGlance.Has(line));
         }
 
         private static void ToggleFocus()
@@ -234,6 +248,7 @@ namespace PixelHeroesAccess.Module
             ScreenManager.Register(new Screens.ArenaPartyScreen());
             ScreenManager.Register(new Screens.ArenaHeroCardScreen());
             ScreenManager.Register(new Screens.ArenaHubScreen());
+            ScreenManager.Register(new Screens.RenameScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }

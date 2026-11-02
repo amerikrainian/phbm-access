@@ -38,7 +38,7 @@ namespace PixelHeroesAccess.Module.UI
                 _open = popup;
                 _name = popup != null ? popup.mHeroName : null;
                 if (popup != null)
-                    Speech.Say(Strings.RenameOpen(GameText.Tr(ET.GUI_TV_B_ChangeHeroName), _name), interrupt: true);
+                    Speech.Say(Strings.RenameOpen(GameText.Line(GameText.Tr(ET.GUI_TV_B_ChangeHeroName)), _name), interrupt: true);
                 return;
             }
             if (popup == null) return;
@@ -80,6 +80,34 @@ namespace PixelHeroesAccess.Module.UI
         {
             _open = null;
             _name = null;
+        }
+    }
+}
+
+namespace PixelHeroesAccess.Module.Screens
+{
+    // The game declares a class named Action in the global namespace.
+    using Action = System.Action;
+
+    /// <summary>
+    /// Holds the rename popup's place among the screens while <see cref="UI.TextEntry"/> types into it:
+    /// the name, nothing else (the popup's on-screen keyboard is the game's mouse aid), landed on
+    /// quietly, since the entry says the popup itself.
+    /// </summary>
+    public sealed class RenameScreen : PopupScreen
+    {
+        public override string Key => "game.rename";
+        public override int Layer => 12;
+
+        protected override Popup Resolve() => Interop.GameScreens.TopPopup() as PopupHeroRename;
+
+        public override void OnPush() => Core.UI.Navigation.QuietNextLanding();
+
+        public override void Build(Core.Graph.GraphBuilder b)
+        {
+            var popup = Resolve() as PopupHeroRename;
+            if (popup == null) return;
+            b.AddItem(Core.Graph.ControlId.Structural("rename:name"), UI.GameNodes.Text(() => (Resolve() as PopupHeroRename)?.mHeroName));
         }
     }
 }

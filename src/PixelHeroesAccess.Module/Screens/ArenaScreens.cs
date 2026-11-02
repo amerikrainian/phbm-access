@@ -210,6 +210,14 @@ namespace PixelHeroesAccess.Module.Screens
                 if (hub.mOfferedBoni != null && hub.mOfferedBoni.Exists(o => o.mButton == button)) continue;
                 if (button == hub.v_Button_ReRoll)
                     b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(hub.v_Textmesh_Button_ReRoll != null ? hub.v_Textmesh_Button_ReRoll.text : GameNodes.LabelOf(button))));
+                else if (button == hub.v_Button_ShopBlacksmith)
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(GameText.Tr(ET.Shop_Blacksmith))));
+                else if (button == hub.v_Button_ShopLibrary)
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(GameText.Tr(ET.Town_Building_Library))));
+                else if (button == hub.v_Button_ShopTemple)
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(GameText.Tr(ET.Town_Building_Temple))));
+                else if (button.gameObject.name == "Button_Go")
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => Strings.ArenaFight));
                 else
                     b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             }
@@ -230,7 +238,10 @@ namespace PixelHeroesAccess.Module.Screens
         {
             var bonus = (ArenaHub.OfferedBonus)offer;
             string name = bonus.mData != null ? GameText.Line(bonus.mData.mDisplayName) : null;
-            return GameNodes.Sentences(name, GameText.Of(bonus.mDescription), GameNodes.LabelOf(bonus.mButton));
+            // The button shows the price, or the game's "active" once bought.
+            string price = GameNodes.LabelOf(bonus.mButton);
+            if (!string.IsNullOrEmpty(price) && char.IsDigit(price[0])) price = Strings.Cost(price);
+            return GameNodes.Sentences(name, GameText.Of(bonus.mDescription), price);
         }
     }
 }
