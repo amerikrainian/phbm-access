@@ -107,8 +107,12 @@ namespace PixelHeroesAccess.Module.Screens
                 if (GameScreens.IsFigure(button)) continue;
                 int index = DrinkIndex(decision, button);
                 if (index >= 0)
-                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button,
-                        () => GameText.Tr((ET)((int)ET.Tavern_Drink_1 + index)) + ", " + Strings.Cost(game.GetPriceDrink(index).ToString())));
+                {
+                    var drink = button;
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(
+                        () => GameText.Tr((ET)((int)ET.Tavern_Drink_1 + index)) + ", " + Strings.Cost(game.GetPriceDrink(index).ToString()),
+                        () => Purchase.Press(drink), () => GameNodes.Usable(drink)));
+                }
                 else
                     b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             }

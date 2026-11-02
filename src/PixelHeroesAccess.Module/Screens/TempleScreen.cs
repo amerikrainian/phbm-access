@@ -78,8 +78,7 @@ namespace PixelHeroesAccess.Module.Screens
                 if (!GameNodes.Usable(button)) return;
                 int before = GameCore.pGameSession.GetPotionCount(type);
                 button.TriggerClick();
-                if (GameCore.pGameSession.GetPotionCount(type) > before)
-                    Speech.Say(PotionLabel(name, type) + ", " + TavernScreen.GoldLine(), interrupt: true);
+                if (GameCore.pGameSession.GetPotionCount(type) > before) Purchase.Said();
                 else Speech.Say(Strings.ShopTooExpensive, interrupt: true);
             }, () => GameNodes.Usable(button)));
         }

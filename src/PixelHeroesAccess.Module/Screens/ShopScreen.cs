@@ -205,11 +205,7 @@ namespace PixelHeroesAccess.Module.Screens
             button.TriggerClick();
             Later.Frames(2, () =>
             {
-                if (done())
-                {
-                    Speech.Say(TavernScreen.GoldLine(), interrupt: true);
-                    Navigation.AnnounceFocused();
-                }
+                if (done()) Purchase.Said();
                 else Speech.Say(Strings.ShopRefused, interrupt: true);
             }, "shop result");
         }

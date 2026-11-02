@@ -202,14 +202,20 @@ namespace PixelHeroesAccess.Module.Screens
                 {
                     if (offer == null || offer.mButton == null || !GameNodes.IsShown(offer.mButton)) continue;
                     var bonus = offer;
-                    b.AddItem(ControlId.ForObject(bonus.mButton), GameNodes.Button(bonus.mButton, () => BonusLabel(bonus)));
+                    b.AddItem(ControlId.ForObject(bonus.mButton), GameNodes.Button(() => BonusLabel(bonus),
+                        () => Purchase.Press(bonus.mButton), () => GameNodes.Usable(bonus.mButton)));
                 }
             foreach (var button in GameScreens.LiveButtons(hub.transform))
             {
                 if (GameScreens.IsFigure(button)) continue;
                 if (hub.mOfferedBoni != null && hub.mOfferedBoni.Exists(o => o.mButton == button)) continue;
                 if (button == hub.v_Button_ReRoll)
-                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(hub.v_Textmesh_Button_ReRoll != null ? hub.v_Textmesh_Button_ReRoll.text : GameNodes.LabelOf(button))));
+                {
+                    var reroll = button;
+                    b.AddItem(ControlId.ForObject(button), GameNodes.Button(
+                        () => GameText.Line(hub.v_Textmesh_Button_ReRoll != null ? hub.v_Textmesh_Button_ReRoll.text : GameNodes.LabelOf(reroll)),
+                        () => Purchase.Press(reroll), () => GameNodes.Usable(reroll)));
+                }
                 else if (button == hub.v_Button_ShopBlacksmith)
                     b.AddItem(ControlId.ForObject(button), GameNodes.Button(button, () => GameText.Line(GameText.Tr(ET.Shop_Blacksmith))));
                 else if (button == hub.v_Button_ShopLibrary)
