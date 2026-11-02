@@ -288,13 +288,18 @@ namespace PixelHeroesAccess.Module.Screens
             {
                 int other = 1 - slot;
                 var there = Slot(hero, other);
-                options.Add(new ChoiceOption(Strings.InventoryMoveTo(HeroLines.SlotName(other)), () => Equip(hero, item, other),
-                    there != null ? ItemLines.Name(there) : Strings.SlotEmpty));
+                options.Add(new ChoiceOption(Strings.SlotLine(Strings.InventoryMoveTo(HeroLines.SlotName(other)), SlotSummary(there, hero)),
+                    () => Equip(hero, item, other)));
             }
             options.Add(new ChoiceOption(Strings.InventoryToBackpack, () => Unequip(hero, item)));
             options.Add(new ChoiceOption(Strings.InventoryThrowAway, () => ConfirmTrash(hero, item)));
             ChoiceSubmenuScreen.Open(ItemLines.Name(item), options);
         }
+
+        // What a slot holds as every slot line says it ("Mediocre Sword of Boredom, Physical damage 28,
+        // Neutral"), or empty.
+        private static string SlotSummary(Item there, CharacterHero hero)
+            => there != null ? ItemLines.Summary(there, hero) : Strings.SlotEmpty;
 
         private static void OpenBackpackMenu(Item item)
         {
@@ -322,8 +327,8 @@ namespace PixelHeroesAccess.Module.Screens
                     {
                         int slot = s;
                         var there = Slot(hero, slot);
-                        options.Add(new ChoiceOption(HeroLines.SlotName(slot), () => Equip(hero, item, slot),
-                            there != null ? ItemLines.Name(there) : Strings.SlotEmpty, row: GameText.Line(hero.GetName())));
+                        options.Add(new ChoiceOption(Strings.SlotLine(HeroLines.SlotName(slot), SlotSummary(there, hero)), () => Equip(hero, item, slot),
+                            row: GameText.Line(hero.GetName())));
                     }
                 }
             }
@@ -335,8 +340,8 @@ namespace PixelHeroesAccess.Module.Screens
                     if (h == null || !h.IsAlive()) continue;
                     var hero = h;
                     var there = Slot(hero, slot);
-                    options.Add(new ChoiceOption(GameText.Line(hero.GetName()), () => Equip(hero, item, slot),
-                        there != null ? ItemLines.Name(there) : Strings.SlotEmpty, row: Strings.InventoryEquipSlot(HeroLines.SlotName(slot))));
+                    options.Add(new ChoiceOption(Strings.SlotLine(GameText.Line(hero.GetName()), SlotSummary(there, hero)), () => Equip(hero, item, slot),
+                        row: Strings.InventoryEquipSlot(HeroLines.SlotName(slot))));
                 }
             }
             if (item.GetItemType() != eItemTypes.Potion)
