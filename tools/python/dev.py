@@ -11,7 +11,7 @@
   input VERB [VERB ...]       dispatch inputs (ui.down, ui.next, ui.activate, ui.back, ui.tooltip, mod.menu...)
   speech [--since N] [--tail K]   what the mod spoke
   log [--grep S] [--tail K]   the mod's log lines
-  gui [--grep REGEX] [--context N]   the raw uGUI hierarchy, optionally around lines matching a regex
+  gui [--grep REGEX] [--context N]   the raw tk2d scene hierarchy, optionally around lines matching a regex
   eval FILE|-                 run C# (Roslyn) against the live game, from a file or stdin
   wait EXPR [--timeout MS]    poll a C# bool expression on the main thread until true
   typeinfo NAME               a type's members (fields, properties, methods)

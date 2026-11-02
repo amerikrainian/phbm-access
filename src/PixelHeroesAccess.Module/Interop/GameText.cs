@@ -131,8 +131,9 @@ namespace PixelHeroesAccess.Module.Interop
             }
         }
 
-        /// <summary>A derived hero value's name (power, accuracy, magic, spirit, the defenses), the
-        /// help page's title for it up to its first colon.</summary>
+        /// <summary>A derived hero value's name (Power, Accuracy, Magic, Spirit, the defenses): the
+        /// help page's line for it ("PWR: Power. For physical damage, mostly melee.") from its colon to
+        /// the end of its first clause.</summary>
         public static string ValueName(eHeroValues value)
         {
             ET id;
@@ -145,15 +146,49 @@ namespace PixelHeroesAccess.Module.Interop
                 case eHeroValues.DefPhy: id = ET.GUI_HL_T_Heroes_DerivedDefPhy; break;
                 default: id = ET.GUI_HL_T_Heroes_DerivedDefMag; break;
             }
-            return Head(Tr(id));
+            return Term(Tr(id)) ?? value.ToString();
         }
 
-        // A help text's term: up to its first colon or line break.
-        private static string Head(string text)
+        /// <summary>A hero attribute's name (Life, Strength, Dexterity, Intelligence, Faith), from the
+        /// help page's line for it ("LIF: Life, affects HP.").</summary>
+        public static string AttributeName(eHeroAttributes attribute)
         {
-            if (string.IsNullOrEmpty(text)) return text;
-            int cut = text.IndexOfAny(new[] { ':', '~', '\n' });
-            return (cut > 0 ? text.Substring(0, cut) : text).Replace("|", "").Trim();
+            ET id;
+            switch (attribute)
+            {
+                case eHeroAttributes.LIF: id = ET.GUI_HL_T_Heroes_AttributesLIF; break;
+                case eHeroAttributes.STR: id = ET.GUI_HL_T_Heroes_AttributesSTR; break;
+                case eHeroAttributes.DEX: id = ET.GUI_HL_T_Heroes_AttributesDEX; break;
+                case eHeroAttributes.INT: id = ET.GUI_HL_T_Heroes_AttributesINT; break;
+                default: id = ET.GUI_HL_T_Heroes_AttributesFAI; break;
+            }
+            return Term(Tr(id)) ?? attribute.ToString();
+        }
+
+        /// <summary>The help line's full explanation of a hero value or attribute, as one line.</summary>
+        public static string ValueHelp(eHeroValues value)
+        {
+            switch (value)
+            {
+                case eHeroValues.PWR: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedPWR));
+                case eHeroValues.ACC: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedACC));
+                case eHeroValues.MAG: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedMAG));
+                case eHeroValues.SPR: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedSPR));
+                case eHeroValues.DefPhy: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedDefPhy));
+                default: return Line(Tr(ET.GUI_HL_T_Heroes_DerivedDefMag));
+            }
+        }
+
+        // "PWR: Power. For physical..." -> "Power": after the colon, to the first period or comma.
+        private static string Term(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            int colon = text.IndexOf(':');
+            string rest = colon >= 0 ? text.Substring(colon + 1) : text;
+            int end = rest.IndexOfAny(new[] { '.', ',', '~', (char)10 });
+            if (end > 0) rest = rest.Substring(0, end);
+            rest = rest.Replace("|", "").Trim();
+            return rest.Length > 0 ? rest : null;
         }
 
         /// <summary>A text mesh's text as one line, or null when the mesh is missing or hidden.</summary>

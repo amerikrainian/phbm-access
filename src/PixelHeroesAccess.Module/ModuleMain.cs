@@ -206,6 +206,8 @@ namespace PixelHeroesAccess.Module
         {
             // The fallback over any game screen no dedicated screen claims: its triggerable buttons.
             ScreenManager.Register(new Screens.GenericScreen());
+            ScreenManager.Register(new Screens.PauseScreen());
+            ScreenManager.Register(new Screens.CampaignSelectScreen());
             ScreenManager.Register(new ModMenuScreen());
             ScreenManager.Register(new HelpScreen());
         }

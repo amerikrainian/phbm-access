@@ -461,6 +461,10 @@ namespace PixelHeroesAccess.Core.Strings
             // Artifact triggered's list of relics: the run's own, and what trials do to the enemies.
             D("relics.this_run", "This run"),
             D("relics.trials", "Trials"),
+
+            // ---- Pixel Heroes ----
+            // Caption-less buttons, read by their icon (Module/UI/IconLabels).
+            D("button.back", "Back"),
         };
 
         private static readonly Dictionary<string, string> _defaults = BuildDefaults();
@@ -741,5 +745,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string EventGroup(string group) => Get("event_group." + (group ?? "").ToLowerInvariant());
         public static string RelicsThisRun => Get("relics.this_run");
         public static string RelicsTrials => Get("relics.trials");
+
+        // ---- Pixel Heroes ----
+        public static string ButtonBack => Get("button.back");
     }
 }

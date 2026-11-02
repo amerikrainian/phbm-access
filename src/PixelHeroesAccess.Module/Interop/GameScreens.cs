@@ -50,9 +50,11 @@ namespace PixelHeroesAccess.Module.Interop
             return screen != null ? screen.transform : null;
         }
 
-        /// <summary>The buttons a player could press now under a root, as the game's own gamepad lists
-        /// them (<see cref="InputGamepad.HandleControllerInput"/>: triggerable, wired, not a scroll
-        /// handle), in reading order: top to bottom, then left to right.</summary>
+        /// <summary>The buttons a player sees under a root, as the game's own gamepad lists them
+        /// (<see cref="InputGamepad.HandleControllerInput"/>: shown, wired, not a scroll handle), the
+        /// disabled ones too (a greyed-out Continue is information; pressing one does nothing), in
+        /// reading order: top to bottom, then left to right. The root is the one the game lets input
+        /// reach (<see cref="InputRoot"/>), so a shown button is pressable unless disabled.</summary>
         public static List<tk2dButton> LiveButtons(Transform root)
         {
             var list = new List<tk2dButton>();
@@ -60,7 +62,7 @@ namespace PixelHeroesAccess.Module.Interop
             foreach (var b in root.GetComponentsInChildren<tk2dButton>())
             {
                 if (b == null || b.gameObject.name == "Scroll Handle") continue;
-                if (!b.IsTriggerable() || !b.HasTriggerTarget()) continue;
+                if (!b.gameObject.activeInHierarchy || !b.HasTriggerTarget()) continue;
                 list.Add(b);
             }
             list.Sort(ReadingOrder);

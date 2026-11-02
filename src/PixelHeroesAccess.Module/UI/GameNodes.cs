@@ -178,16 +178,61 @@ namespace PixelHeroesAccess.Module.UI
             };
         }
 
+        /// <summary>One choice of a mutually exclusive group the game draws as checkboxes (the music
+        /// mode, the language, the window mode): "label, radio button[, selected]"; Enter presses it.</summary>
+        public static NodeVtable Radio(tk2dButton button, Func<bool> selected, Func<string> label = null)
+        {
+            Func<string> lbl = label ?? (() => LabelOf(button));
+            return new NodeVtable
+            {
+                ControlType = ControlTypes.RadioButton,
+                Announcements = new List<NodeAnnouncement>
+                {
+                    LabelPart(lbl),
+                    SelectedPart(selected),
+                    DisabledPart(() => Usable(button)),
+                },
+                SearchText = lbl,
+                OnActivate = () => Click(button),
+                StateText = () => selected() ? Strings.StateSelected : null,
+            };
+        }
+
+        /// <summary>A tab button: "label, tab[, selected]"; landing on it or Enter shows its page.</summary>
+        public static NodeVtable Tab(tk2dButton button, Func<bool> selected, Func<string> label = null)
+        {
+            Func<string> lbl = label ?? (() => LabelOf(button));
+            Action select = () => { if (!selected()) Click(button); };
+            return new NodeVtable
+            {
+                ControlType = ControlTypes.Tab,
+                Announcements = new List<NodeAnnouncement> { LabelPart(lbl), DisabledPart(() => Usable(button)) },
+                SearchText = lbl,
+                OnActivate = select,
+                OnFocus = select,
+            };
+        }
+
         /// <summary>Whether a checkbox sprite shows checked.</summary>
         public static bool IsChecked(tk2dSprite box)
             => box != null && box.CurrentSprite != null && box.CurrentSprite.name == "Checkbox_Checked";
 
-        /// <summary>The shown texts under a tk2d button (its "TextMesh" child and any other caption), or
-        /// the object's name when it has none.</summary>
+        /// <summary>The node a bare tk2d button reads as: a checkbox (its own sprite a
+        /// <c>Checkbox_*</c>) as a toggle, anything else as a button.</summary>
+        public static NodeVtable ForButton(tk2dButton button)
+        {
+            var sprite = button.GetComponent<tk2dSprite>();
+            if (sprite != null && sprite.CurrentSprite != null && sprite.CurrentSprite.name.StartsWith("Checkbox_"))
+                return Checkbox(button, sprite);
+            return Button(button);
+        }
+
+        /// <summary>The shown texts under a tk2d button (its "TextMesh" child and any other caption);
+        /// a caption-less icon button reads by its icon (<see cref="IconLabels.Of"/>).</summary>
         public static string LabelOf(Component widget)
         {
             if (widget == null) return null;
-            return GameText.Under(widget) ?? widget.gameObject.name;
+            return GameText.Under(widget) ?? IconLabels.Of(widget);
         }
 
         /// <summary>Whether a widget is both active in the hierarchy and worth listing.</summary>
