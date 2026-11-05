@@ -184,7 +184,7 @@ Five projects, all under `src/`:
   `IDevDriver`), `Screens/` (one file per game screen or family, below), `Battle/BattleEvents` (the
   fight's narration hooks), `Nodes/` (`ItemLines`, `HeroLines`, `HeroNodes`, `StatsLines`: the
   reusable readers), `Interop/` (`GameScreens`, `GameText`), `UI/` (`GameNodes` node factories over
-  tk2d, `FocusMode`, `Buffers`, `IconLabels`, `TextEntry`, `RunGlance`, `Later`, `ScreenIntro`),
+  tk2d, `FocusMode`, `Buffers`, `SpeechBubbles`, `IconLabels`, `TextEntry`, `RunGlance`, `Later`, `ScreenIntro`),
   `Input/` (`KeyboardBinding`, `ControllerBinding`, `Gamepad`, `UnityNavInput`), `LanguageSync`,
   `UpdateChecker`. References `Assembly-CSharp` **publicized**
   (`BepInEx.AssemblyPublicizer.MSBuild`): private members read as plain fields, nested private enums
@@ -219,7 +219,8 @@ popups 10, the rename popup 12, the mod menu 50.
   achievements from `PlayerProgress`, whatever is scrolled into view), `GraveyardScreen` (tombstones
   from their records; landing selects one; its panel the control buffer).
 - **Tavern**: `TavernScreen` (the heroes for hire, the party the game keeps sorted, Dismiss, re-roll,
-  Start; a later visit's drinks with their cost), `TavernHeroCardScreen` (the backstory rebuilt from
+  Start, the barkeeper (a new game only) and the band, each answering with a speech bubble; a later
+  visit's drinks with their cost and the band), `TavernHeroCardScreen` (the backstory rebuilt from
   the hero, the per-point gains, the skills, Hire, Rename). `RenameScreen` + `UI/TextEntry`: the
   rename popup types by itself; the mod's keys stand down, each change is echoed, Enter presses OK
   (two characters with a letter, the game's rule), Escape cancels.
@@ -254,14 +255,22 @@ popups 10, the rename popup 12, the mod menu 50.
   by their place at the fight's start. `Battle/BattleEvents` narrates in the game's own log words
   (`LogScreen.AddMessageForAction`, deduplicated by outcome; `AddMessageForStunned`), plus what the
   game never logs: status ticks and ends (`StatusEffect.UpdateTick`), and game over and victory from
-  `GameCore.HandleGameOver` (the scene changes the same frame). The game has no crits and no
-  fleeing.
+  `GameCore.HandleGameOver` (the scene changes the same frame). The heroes' remarks are
+  `UI/SpeechBubbles`' (below). The game has no crits and no fleeing.
 - **Arena**: `ArenaStartupScreen`, `ArenaPartyScreen`, `ArenaHeroCardScreen`, `ArenaHubScreen`
   (round, gold, next enemies, bonuses with prices, re-roll, the shops, Fight).
 - **Help and log**: `GameHelpScreen` (the help popup's four tabs from the game's sources: statuses in
   the game's order with turns; element relations the game draws as a diagram, from
   `GameCore.CalculateElementRelationSourceToTarget`; items; heroes), `QuestLogScreen`.
 - **Mod**: `ModMenuScreen` (settings, all keys), `HelpScreen` (F1), `KeyBindingScreens`.
+- **Speech bubbles** (`UI/SpeechBubbles`, not a screen): every single-line bubble, said as it
+  appears with its speaker ("Calen: Damn you!", the hero, else the NPC it hangs from, else nobody: the
+  shop's "Thank you!") and kept in the log buffer: fight remarks (a hit's or heal's held until after
+  its outcome line), the tavern's hired and rejected heroes (said at Start), its barkeeper and band
+  ("band" the mod's word; both its band lines are the same sentence in the game's data), the shop, the inventory's swap hint, and
+  the idle chatter of town, tavern, temple, library and arena (the town's about every 3.5 seconds).
+  The line is taken at `ShowWithText` and said at `InternalShowSpeechBubble` without a delay, since
+  some wait two seconds first. Two mod menu settings: Speech bubbles, and Idle chatter among them.
 
 ## Keys
 Focus mode is on at launch; Ctrl+Shift+A toggles it. F1 is the key help: the keys that do something

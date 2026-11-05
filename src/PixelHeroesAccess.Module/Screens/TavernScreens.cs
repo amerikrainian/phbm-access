@@ -19,9 +19,9 @@ namespace PixelHeroesAccess.Module.Screens
     /// re-roll line and button, and Start once three are hired), the party
     /// of up to three (<see cref="Tavern.mHeroesSelected"/>, which the game keeps sorted by how much a
     /// hero can take: a row per slot, the hero (Enter opens the card) and its Unhire button), and the
-    /// rest: Help and Pause; Escape is Pause. On a later visit
-    /// (<see cref="Tavern.eTavernStates.FreeDecision"/>) it is the game's buttons (the four drinks,
-    /// Talk, Leave) and the gold. Every hero carries the hero and items buffers.
+    /// rest: the barkeeper and the band (each answers a click with a line in a speech bubble), Help and
+    /// Pause; Escape is Pause. On a later visit (<see cref="Tavern.eTavernStates.FreeDecision"/>) it is
+    /// the game's buttons (the four drinks, Talk, the band, Leave) and the gold. Every hero carries the hero and items buffers.
     /// </summary>
     public sealed class TavernScreen : SceneScreen<Tavern>
     {
@@ -86,6 +86,11 @@ namespace PixelHeroesAccess.Module.Screens
 
             b.BeginStop("tavern:menu");
             b.PushContext(null, null);
+            // The barkeeper's and the band's clicks: each a line in a speech bubble (UI/SpeechBubbles).
+            // The barkeeper answers only at a new game (Tavern.BarkeeperSpeak); later, Talk is it.
+            if (game.mIsNewGame && GameNodes.IsShown(game.v_Selector_Barkeeper))
+                b.AddItem(ControlId.Structural("tavern:barkeeper"), GameNodes.Button(game.v_Selector_Barkeeper, () => BarkeeperName(game)));
+            AddBand(b, game);
             AddIfShown(b, "tavern:help", game.v_Button_Help);
             AddIfShown(b, "tavern:pause", game.v_Button_Pause);
             b.PopContext();
@@ -102,9 +107,12 @@ namespace PixelHeroesAccess.Module.Screens
                 if (drink == null) continue;
                 drinks.Add(drink);
             }
+            bool band = false;
             foreach (var button in GameScreens.LiveButtons(game.transform))
             {
                 if (GameScreens.IsFigure(button)) continue;
+                // The band with the content, before the way out.
+                if (!band && GameScreens.ButtonRank(button) > 0) { AddBand(b, game); band = true; }
                 int index = DrinkIndex(decision, button);
                 if (index >= 0)
                 {
@@ -116,6 +124,7 @@ namespace PixelHeroesAccess.Module.Screens
                 else
                     b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
             }
+            if (!band) AddBand(b, game);
             b.AddItem(ControlId.Structural("tavern:gold"), GameNodes.Text(() => GoldLine()));
             b.AddItem(ControlId.Structural("tavern:drinks"), GameNodes.Text(() => GameText.Of(game.v_Textmesh_DrinkCount)));
             b.PopContext();
@@ -126,6 +135,20 @@ namespace PixelHeroesAccess.Module.Screens
             for (int i = 0; i < 4 && decision != null; i++)
                 if (decision.GetAButton(i) == button) return i;
             return -1;
+        }
+
+        private static void AddBand(GraphBuilder b, Tavern game)
+        {
+            if (GameNodes.IsShown(game.v_Selector_Band))
+                b.AddItem(ControlId.Structural("tavern:band"), GameNodes.Button(game.v_Selector_Band, () => Strings.TavernBand));
+        }
+
+        // The barkeeper NPC's own name ("Barkeeper"), the mod's word if it is not there yet.
+        private static string BarkeeperName(Tavern game)
+        {
+            var npc = game.mNPCs != null && game.mNPCs.Count > 0 ? game.mNPCs[0] : null;
+            string name = npc != null ? GameText.Line(npc.GetName()) : null;
+            return string.IsNullOrWhiteSpace(name) ? Strings.TavernBarkeeper : name;
         }
 
         private static void AddIfShown(GraphBuilder b, string id, tk2dButton button)

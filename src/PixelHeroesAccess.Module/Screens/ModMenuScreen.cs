@@ -72,6 +72,10 @@ namespace PixelHeroesAccess.Module.Screens
                 () => settings.SpeakPositions, v => settings.SpeakPositions = v));
             b.AddItem(ControlId.Structural("modsettings:focus"), Toggle(() => Strings.ModFocusOnLaunch,
                 () => settings.FocusModeOnLaunch, v => settings.FocusModeOnLaunch = v));
+            b.AddItem(ControlId.Structural("modsettings:bubbles"), Toggle(() => Strings.ModSpeechBubbles,
+                () => UI.SpeechBubbles.On, v => settings.Store.SetBool(UI.SpeechBubbles.OnKey, v)));
+            b.AddItem(ControlId.Structural("modsettings:chatter"), Toggle(() => Strings.ModIdleChatter,
+                () => UI.SpeechBubbles.IdleOn, v => settings.Store.SetBool(UI.SpeechBubbles.IdleKey, v)));
             b.PopContext();
         }
 

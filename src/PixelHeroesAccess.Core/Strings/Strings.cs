@@ -119,6 +119,10 @@ namespace PixelHeroesAccess.Core.Strings
             D("mod.close", "Close"),
             D("mod.speak_positions", "Speak list positions"),
             D("mod.focus_on_launch", "Keyboard navigation on at launch"),
+            // The settings for the game's speech bubbles (speech.bubble): all of them, and the idle
+            // chatter of the town, tavern, temple, library and arena among them.
+            D("mod.speech_bubbles", "Speech bubbles"),
+            D("mod.idle_chatter", "Idle chatter"),
             // {0} = the key category, one of the three names below.
             D("mod.key_category", "{0} keys"),
             // The key categories of the "All keys" list: live everywhere, on the focused screen, in a run,
@@ -240,6 +244,10 @@ namespace PixelHeroesAccess.Core.Strings
             D("tavern.party", "party"),
             // A tavern candidate already in the party.
             D("tavern.hired", "hired"),
+            // The tavern's band, a click target that answers with a line (the game has no word for it).
+            D("tavern.band", "band"),
+            // The tavern's barkeeper, should the game's NPC name be missing.
+            D("tavern.barkeeper", "barkeeper"),
             // A party slot: {0} = its number, {1} = the hero or empty.
             D("party.slot", "party {0}: {1}"),
             // The party's gold.
@@ -286,6 +294,8 @@ namespace PixelHeroesAccess.Core.Strings
             D("battle.status_damage", "{0}: {1} {2} HP"),
             // A status running out: {0} = the status, {1} = the character.
             D("battle.status_ends", "{0} ends on {1}"),
+            // A speech bubble: {0} = who speaks (a hero, an NPC), {1} = the game's line.
+            D("speech.bubble", "{0}: {1}"),
             // All heroes have fallen.
             D("battle.defeat", "defeat"),
             // The battle log buffer.
@@ -562,6 +572,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ModClose => Get("mod.close");
         public static string ModSpeakPositions => Get("mod.speak_positions");
         public static string ModFocusOnLaunch => Get("mod.focus_on_launch");
+        public static string ModSpeechBubbles => Get("mod.speech_bubbles");
+        public static string ModIdleChatter => Get("mod.idle_chatter");
         public static string ModKeyCategory(string category)
         {
             string name = "mod.category." + (category ?? "").ToLowerInvariant();
@@ -637,6 +649,8 @@ namespace PixelHeroesAccess.Core.Strings
         public static string TavernCandidates => Get("tavern.candidates");
         public static string TavernParty => Get("tavern.party");
         public static string TavernHired => Get("tavern.hired");
+        public static string TavernBand => Get("tavern.band");
+        public static string TavernBarkeeper => Get("tavern.barkeeper");
         public static string PartySlot(string number, string hero) => F("party.slot", number, hero);
         public static string Gold(string amount) => F("gold", amount);
         public static string TownPlaces => Get("town.places");
@@ -662,6 +676,7 @@ namespace PixelHeroesAccess.Core.Strings
         public static string BattleRested => Get("battle.rested");
         public static string BattleStatusDamage(string status, string character, string change) => F("battle.status_damage", status, character, change);
         public static string BattleStatusEnds(string status, string character) => F("battle.status_ends", status, character);
+        public static string SpeechBubble(string speaker, string line) => F("speech.bubble", speaker, line);
         public static string BattleDefeat => Get("battle.defeat");
         public static string BufferLog => Get("buffer.log");
         public static string LootExperience(string amount) => F("loot.experience", amount);

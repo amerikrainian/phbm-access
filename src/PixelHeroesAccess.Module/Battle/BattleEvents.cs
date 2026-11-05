@@ -21,6 +21,7 @@ namespace PixelHeroesAccess.Module.Battle
     /// the statuses' ticks between turns (<see cref="StatusEffect.UpdateTick"/>: burning and poison
     /// damage, a status running out). The log's marks are rearranged for speech: the target's "&gt;"
     /// arrow dropped, its KILL mark put last. Every hook is a postfix; nothing in the fight is changed.
+    /// The heroes' remarks in a fight are <see cref="UI.SpeechBubbles"/>'.
     /// </summary>
     internal static class BattleEvents
     {

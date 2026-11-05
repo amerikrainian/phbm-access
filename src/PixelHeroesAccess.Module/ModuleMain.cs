@@ -271,6 +271,7 @@ namespace PixelHeroesAccess.Module
             bool restore = _host == null || !_host.SuccessorLoaded;
             try { Screens.Loot.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] loot: " + e); }
             try { Battle.BattleEvents.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] battle events: " + e); }
+            try { UI.SpeechBubbles.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] speech bubbles: " + e); }
             try { TextEntry.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] text entry: " + e); }
             try { FocusMode.Shutdown(restore); } catch (Exception e) { _host?.LogError("[dispose] focus: " + e); }
             try { Gamepad.Reset(); } catch (Exception e) { _host?.LogError("[dispose] gamepad: " + e); }
