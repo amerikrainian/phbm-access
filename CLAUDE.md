@@ -279,7 +279,8 @@ Arrows navigate, Tab/Shift+Tab cycle stops (always wrapping; silent with one sto
 Backspace is the secondary action, Escape backs out (the game's cancel; on a scene where that has
 nothing to do, `SceneScreen.PauseButton`/`CancelActs`, the pause button), Home/End jump,
 Alt+Up/Down jump sections, letters search the focused stop, Ctrl+arrows review the buffers. In a
-run (`UI/RunGlance`, Global category, live only where the line exists): Ctrl+H the party's health, Ctrl+G the gold, Ctrl+Q the quest under way. Every action
+run (`UI/RunGlance`, Global category, live only where the line exists): Ctrl+H the party's health, Ctrl+G the gold, Ctrl+Q the quest under way. Ctrl+Tab (pad Y, Global, `ShopScreen.SwapButton`) goes between a shop and the inventory either way:
+the shop's Inventory button, the inventory's Shop button (the arena's: its Go, which reopens the shop). Every action
 carries a gamepad binding too (`ControllerBinding`). The mod menu's All keys rebinds any of them.
 
 ## Buffers (`Core/Buffers`, `Module/UI/Buffers`)

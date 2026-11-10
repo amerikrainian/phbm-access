@@ -171,6 +171,13 @@ namespace PixelHeroesAccess.Module
             Glance("run.gold", "Gold", KeyCode.G, RunGlance.Gold);
             Glance("run.quest", "Current quest", KeyCode.Q, RunGlance.Quest);
 
+            // Between a shop and the inventory, either way (the shop's Inventory button, the inventory's
+            // Shop button), focus unmoved until the scene changes.
+            InputManager.Register("shop.swap", "Shop and inventory", InputCategory.Global, () => { if (FocusMode.Active) ShopScreen.Swap(); })
+                .AddBinding(new KeyboardBinding(KeyCode.Tab, ctrl: true))
+                .AddBinding(new ControllerBinding(ControllerInput.Y))
+                .When(() => FocusMode.Active && ShopScreen.SwapButton() != null);
+
             // Global: always live, so the player can hand the keyboard back to the game and reclaim it.
             InputManager.Register("mod.focus", "Toggle navigation", InputCategory.Global, ToggleFocus)
                 .AddBinding(new KeyboardBinding(KeyCode.A, ctrl: true, shift: true))

@@ -104,6 +104,7 @@ keys.bound=Bound to {0}
 rebind.key=Press a key for {0}, Escape cancels
 rebind.button=Press a button for {0}, B cancels
 rebind.conflict={0} is also {1}
+bind.shop.swap=Shop and inventory
 bind.mod.menu=Mod menu
 bind.mod.help=Keys here
 screen.help=Keys here

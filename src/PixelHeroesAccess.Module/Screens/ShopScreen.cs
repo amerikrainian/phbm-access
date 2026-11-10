@@ -117,6 +117,31 @@ namespace PixelHeroesAccess.Module.Screens
             yield return new ElementAction(ActionIds.Back, Strings.Get("bind.ui.back"), _ => ShopOpen?.EventButtonShopBack());
         }
 
+        /// <summary>
+        /// The way between a shop and the party's inventory, both directions (Ctrl+Tab): the shop's
+        /// Inventory button, else the inventory's Shop button (a town or library shop), else in the
+        /// arena the inventory's Go, which reopens the shop the inventory was entered from. Null where
+        /// neither applies or the button is not pressable (a popup over it).
+        /// </summary>
+        public static tk2dButton SwapButton()
+        {
+            var shop = ShopOpen;
+            if (shop != null) return GameNodes.Usable(shop.v_Button_Inventory) ? shop.v_Button_Inventory : null;
+            if (!(ScreenBase.pCurrentInstance is Inventory inv) || ScreenBase.pSwitchedFromShopScene == eScenes.COUNT) return null;
+            if (GameNodes.Usable(inv.v_ButtonShop)) return inv.v_ButtonShop;
+            if (GameCore.IsArenaMode() && GameNodes.Usable(inv.v_ButtonRoomOverview)) return inv.v_ButtonRoomOverview;
+            return null;
+        }
+
+        /// <summary>Presses <see cref="SwapButton"/>; the screen it lands on says itself.</summary>
+        public static void Swap()
+        {
+            var button = SwapButton();
+            if (button == null) return;
+            CoreLog.Info("shop: swap through " + button.name);
+            button.TriggerClick();
+        }
+
         // An item bought or sold leaves its list; the result is said, so the landing after is quiet.
         private static NodeVtable Quiet(NodeVtable vt)
         {

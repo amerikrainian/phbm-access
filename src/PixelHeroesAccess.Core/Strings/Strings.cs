@@ -162,6 +162,8 @@ namespace PixelHeroesAccess.Core.Strings
             D("rebind.button", "Press a button for {0}, B cancels"),
             // {0} = the new key, {1} = an action of another category that has it too.
             D("rebind.conflict", "{0} is also {1}"),
+            // Ctrl+Tab: between a shop and the inventory, either way.
+            D("bind.shop.swap", "Shop and inventory"),
             D("bind.mod.menu", "Mod menu"),
             // The context-sensitive key help (F1): the keys that do something on this screen, on this
             // control. Enter on a row runs it.
