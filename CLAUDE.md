@@ -250,7 +250,7 @@ popups 10, the rename popup 12, the mod menu 50.
   game's ranges give that no meaning. Enter selects as the slot's click does
   (`BattleGUI.SelectHand`; the rest and cooldown refusals said); then the side the action addresses
   leads with "target" ("all") or "out of range" (the game's selectors), focus goes to the first
-  target, Enter strikes, Escape returns to the action. Backspace offers throw away for fist. A new
+  target, Enter strikes, Escape returns to the action. Backspace offers throw away for fist. 1 to 4 (pad LT+X/Y, RT+X/Y; UI keys the screen answers, `BattleScreen.QuickKeys`) choose the focused hero's left hand, right hand, skill 1, skill 2 as Enter on it does (a stunned hero's breaking free is its 1); the hero is the one whose row has focus, else, while an action waits for its target, the one who chose it; nothing where the hero lacks that action. Choosing another action while one waits for its target moves focus to the new one's targets. A new
   turn lands on the first action of the first hero who may act. Enemies sharing a name are numbered
   by their place at the fight's start. `Battle/BattleEvents` narrates in the game's own log words
   (`LogScreen.AddMessageForAction`, deduplicated by outcome; `AddMessageForStunned`), plus what the

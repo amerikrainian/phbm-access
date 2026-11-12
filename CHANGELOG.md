@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.0.4
+
+- In combat, numbers 1 through 4 can now be used as shortcuts for your left/right hands and hero skills, respectively.
+
 ## V0.0.3
 
 - Added ctrl+tab to switch between shop and equipment views.

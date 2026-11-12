@@ -164,6 +164,11 @@ namespace PixelHeroesAccess.Core.Strings
             D("rebind.conflict", "{0} is also {1}"),
             // Ctrl+Tab: between a shop and the inventory, either way.
             D("bind.shop.swap", "Shop and inventory"),
+            // 1 to 4 in a fight: the focused hero's hands and skills.
+            D("bind.battle.hand.left", "Left hand"),
+            D("bind.battle.hand.right", "Right hand"),
+            // {0} = the skill's number, 1 or 2.
+            D("bind.battle.skill", "Skill {0}"),
             D("bind.mod.menu", "Mod menu"),
             // The context-sensitive key help (F1): the keys that do something on this screen, on this
             // control. Enter on a row runs it.

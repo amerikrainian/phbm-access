@@ -165,6 +165,22 @@ namespace PixelHeroesAccess.Module
                 .AddBinding(new KeyboardBinding(KeyCode.DownArrow, ctrl: true))
                 .AddBinding(new ControllerBinding(ControllerInput.RightStickDown)).Repeating();
 
+            // The fight's quick actions: the focused hero's two hands and two skills, as Enter on that
+            // action does. No handler: the battle screen answers them by key, and offers them only
+            // where the focused hero has the action.
+            InputManager.Register(Screens.BattleScreen.QuickKeys[0], "Left hand", InputCategory.UI)
+                .AddBinding(new KeyboardBinding(KeyCode.Alpha1))
+                .AddBinding(new ControllerBinding(ControllerInput.X, ControllerInput.LeftTrigger));
+            InputManager.Register(Screens.BattleScreen.QuickKeys[1], "Right hand", InputCategory.UI)
+                .AddBinding(new KeyboardBinding(KeyCode.Alpha2))
+                .AddBinding(new ControllerBinding(ControllerInput.Y, ControllerInput.LeftTrigger));
+            InputManager.Register(Screens.BattleScreen.QuickKeys[2], "Skill 1", InputCategory.UI)
+                .AddBinding(new KeyboardBinding(KeyCode.Alpha3))
+                .AddBinding(new ControllerBinding(ControllerInput.X, ControllerInput.RightTrigger));
+            InputManager.Register(Screens.BattleScreen.QuickKeys[3], "Skill 2", InputCategory.UI)
+                .AddBinding(new KeyboardBinding(KeyCode.Alpha4))
+                .AddBinding(new ControllerBinding(ControllerInput.Y, ControllerInput.RightTrigger));
+
             // The run's read keys, on any screen of a run, focus unmoved: Ctrl and a letter, which
             // type-ahead never takes.
             Glance("run.party", "Party health", KeyCode.H, RunGlance.Party);

@@ -230,6 +230,65 @@ namespace PixelHeroesAccess.Module.Screens
                 }
                 else Back();
             });
+            // 1 to 4: the focused hero's left hand, right hand, first and second skill; a stunned hero's
+            // one action (breaking free) is its 1. Offered only where that action exists.
+            int heroIndex = QuickHero();
+            if (heroIndex < 0) yield break;
+            var hero = Game.pHeroes[heroIndex];
+            for (int slot = 0; slot < QuickKeys.Length; slot++)
+            {
+                if (SlotItem(hero, slot) == null) continue;
+                int s = slot;
+                yield return new ElementAction(QuickKeys[s], Strings.BindLabel(QuickKeys[s], QuickKeys[s]), _ => Quick(s));
+            }
+        }
+
+        /// <summary>The quick action keys, by slot: the hands, then the skills.</summary>
+        public static readonly string[] QuickKeys = { "battle.hand.left", "battle.hand.right", "battle.skill.1", "battle.skill.2" };
+
+        // The hero the quick keys act for: the one whose row has focus, else, while an action waits
+        // for its target, the hero who chose it. -1 outside the heroes' turn.
+        private static int QuickHero()
+        {
+            var game = Game;
+            var gui = Gui;
+            if (game == null || gui == null || game.pHeroes == null) return -1;
+            var state = gui.mBattleState;
+            if (state != BattleGUI.eBattleStates.PlayerSelectedNothing && state != BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget) return -1;
+            var id = Navigation.FocusedNode?.Id;
+            if (id != null)
+            {
+                for (int h = 0; h < game.pHeroes.Length; h++)
+                {
+                    if (game.pHeroes[h] == null) continue;
+                    if (id.Equals(CharacterId(h))) return h;
+                    for (int slot = 0; slot < QuickKeys.Length; slot++)
+                        if (id.Equals(ActionId(h, slot))) return h;
+                }
+            }
+            if (state == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHero != null) return gui.mSelectedHero.pHeroIndex;
+            return -1;
+        }
+
+        // The action a hero has in a slot (0 and 1 the hands, 2 and 3 the skills), as the row lists
+        // them: a stunned hero has breaking free in slot 0 alone, a dead one nothing.
+        private static ItemActive SlotItem(CharacterHero hero, int slot)
+        {
+            if (hero == null || !hero.IsAlive()) return null;
+            if (hero.HasStatusEffect(eStatusEffects.Stunned)) return slot == 0 ? hero.pBreakFreeFromStunned : null;
+            if (slot < 2) return slot < hero.pItemsActive.Length ? hero.pItemsActive[slot] : null;
+            return slot - 2 < hero.pHeroSkills.Length ? hero.pHeroSkills[slot - 2] : null;
+        }
+
+        // A quick key: the action chosen as Enter on it does, focus to its first target; a refusal
+        // says itself.
+        private static void Quick(int slot)
+        {
+            int heroIndex = QuickHero();
+            if (heroIndex < 0) return;
+            var item = SlotItem(Game.pHeroes[heroIndex], slot);
+            if (item == null) return;
+            Choose(heroIndex, slot, item, slot >= 2);
         }
 
         private static void NumberEnemies()
@@ -310,21 +369,22 @@ namespace PixelHeroesAccess.Module.Screens
         }
 
         // Selecting an action as its slot's click does; the game refuses a resting hero and a skill still
-        // cooling down with a message line, which is said.
-        private static void Choose(int heroIndex, int slot, ItemActive item, bool skill)
+        // cooling down with a message line, which is said. True when the action now waits for its target.
+        private static bool Choose(int heroIndex, int slot, ItemActive item, bool skill)
         {
             var game = Game;
             var gui = Gui;
-            if (game == null || gui == null || item == null) return;
+            if (game == null || gui == null || item == null) return false;
             var hero = game.pHeroes[heroIndex];
-            if (!hero.IsAlive()) return;
-            if (!hero.CanActPossibly()) { Speech.Say(GameText.Tr(ET.MessageSelectedHeroHasToRest), interrupt: true); return; }
-            if (skill && !((ItemActiveSkill)item).IsReadyForUse()) { Speech.Say(GameText.Tr(ET.MessageSelectedCoolingDown), interrupt: true); return; }
+            if (!hero.IsAlive()) return false;
+            if (!hero.CanActPossibly()) { Speech.Say(GameText.Tr(ET.MessageSelectedHeroHasToRest), interrupt: true); return false; }
+            if (skill && !((ItemActiveSkill)item).IsReadyForUse()) { Speech.Say(GameText.Tr(ET.MessageSelectedCoolingDown), interrupt: true); return false; }
             _chosen = ActionId(heroIndex, slot);
-            if (gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHand == item)
+            bool waiting = gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget;
+            if (waiting && gui.mSelectedHand == item)
             {
                 FocusFirstTarget();
-                return;
+                return true;
             }
             if (!hero.HasStatusEffect(eStatusEffects.Stunned))
             {
@@ -332,6 +392,11 @@ namespace PixelHeroesAccess.Module.Screens
                 if (hero.pBattleHandDisplayMode != mode) gui.SetHandMode(hero, mode);
             }
             gui.SelectHand(heroIndex, (BattleGUI.eHandIndex)(slot % 2));
+            bool chosen = gui.mBattleState == BattleGUI.eBattleStates.PlayerSelectedHandNeedsTarget && gui.mSelectedHand == item;
+            // One action swapped for another leaves the state as it was, so OnUpdate sees no change:
+            // the new action's targets get the focus here.
+            if (waiting && chosen) FocusFirstTarget();
+            return chosen;
         }
 
         private static void OfferThrowAway(int heroIndex, int slot, ItemActive item)
