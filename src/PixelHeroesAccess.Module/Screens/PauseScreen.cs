@@ -34,7 +34,7 @@ namespace PixelHeroesAccess.Module.Screens
             bool options = pause.v_Tabs != null && pause.v_Tabs.Length > 1 && pause.v_Tabs[1] != null && pause.v_Tabs[1].activeInHierarchy;
             if (!options)
             {
-                b.PushContext(GameText.Tr(ET.GUI_GL_T_TitlePause), Strings.RoleList);
+                b.PushContext(GameText.Tr(ET.GUI_GL_T_TitlePause));
                 foreach (var button in GameScreens.LiveButtons(pause.v_Tabs[0].transform))
                     b.AddItem(ControlId.ForObject(button), GameNodes.ForButton(button));
                 b.PopContext();

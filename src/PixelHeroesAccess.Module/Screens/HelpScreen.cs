@@ -66,7 +66,7 @@ namespace PixelHeroesAccess.Module.Screens
         {
             // A context with no words of its own, there for the rows' positions: opening says "Keys
             // here" itself, interrupting whatever was being said, so a label would say it a second
-            // time, and "list" tells a player who asked for the keys nothing.
+            // time.
             b.PushContext(null, null);
             if (s_entries.Count == 0)
                 b.AddItem(ControlId.Structural("help:none"), GameNodes.Text(() => Strings.HelpNone));

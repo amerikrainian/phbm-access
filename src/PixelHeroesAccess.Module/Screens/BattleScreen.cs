@@ -153,7 +153,7 @@ namespace PixelHeroesAccess.Module.Screens
             bool offensive = targeting && gui.mSelectedHand.IsOffensive();
             b.BeginStop("battle:field");
             b.SetRegion("battle:party");
-            b.PushContext(Strings.BattleParty, Strings.RoleList);
+            b.PushContext(Strings.BattleParty);
             for (int i = 0; i < game.pHeroes.Length; i++)
             {
                 var hero = game.pHeroes[i];
@@ -189,7 +189,7 @@ namespace PixelHeroesAccess.Module.Screens
             b.PopContext();
 
             b.SetRegion("battle:enemies");
-            b.PushContext(Strings.BattleEnemies, Strings.RoleList, positions: false);
+            b.PushContext(Strings.BattleEnemies, positions: false);
             // One row, front to back as they stand; entered on the first target while an attack waits
             // for one, else on the front enemy.
             b.StartRow("battle:enemies", FirstEnemyTarget);

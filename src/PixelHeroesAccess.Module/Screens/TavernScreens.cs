@@ -42,7 +42,7 @@ namespace PixelHeroesAccess.Module.Screens
         private static void BuildSelection(GraphBuilder b, Tavern game)
         {
             b.BeginStop("tavern:candidates");
-            b.PushContext(Strings.TavernCandidates, Strings.RoleList);
+            b.PushContext(Strings.TavernCandidates);
             if (game.mHeroesTavern != null)
             {
                 foreach (var candidate in game.mHeroesTavern)
@@ -68,7 +68,7 @@ namespace PixelHeroesAccess.Module.Screens
             b.PopContext();
 
             b.BeginStop("tavern:party");
-            b.PushContext(Strings.TavernParty, Strings.RoleList);
+            b.PushContext(Strings.TavernParty);
             for (int i = 0; i < 3; i++)
             {
                 int slot = i;

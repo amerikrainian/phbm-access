@@ -51,7 +51,7 @@ namespace PixelHeroesAccess.Module.Screens
             if (shop == null || screen == null) return;
 
             b.BeginStop("shop:stock");
-            b.PushContext(GameText.Tr(ET.Shop_StockedItems), Strings.RoleList);
+            b.PushContext(GameText.Tr(ET.Shop_StockedItems));
             if (shop.mItemsShopStock != null)
                 foreach (var offer in shop.mItemsShopStock)
                 {
@@ -65,7 +65,7 @@ namespace PixelHeroesAccess.Module.Screens
             b.PopContext();
 
             b.BeginStop("shop:backpack");
-            b.PushContext(GameText.Tr(ET.GUI_SH_B_Backpack), Strings.RoleList);
+            b.PushContext(GameText.Tr(ET.GUI_SH_B_Backpack));
             if (screen.pItemsBackpack != null)
                 foreach (var carried in screen.pItemsBackpack)
                 {
@@ -79,7 +79,7 @@ namespace PixelHeroesAccess.Module.Screens
             b.PopContext();
 
             b.BeginStop("shop:equipment");
-            b.PushContext(GameText.Tr(ET.GUI_SH_B_Equiptment), Strings.RoleList);
+            b.PushContext(GameText.Tr(ET.GUI_SH_B_Equiptment));
             // A row per hero of the five slots, as the inventory has them; one row key, so Up and Down
             // keep the slot. A sold item leaves its slot empty in place.
             if (screen.pHeroes != null)

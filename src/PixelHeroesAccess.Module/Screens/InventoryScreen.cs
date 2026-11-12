@@ -41,7 +41,7 @@ namespace PixelHeroesAccess.Module.Screens
             if (inv == null || inv.pHeroes == null) return;
 
             b.BeginStop("inv:party");
-            b.PushContext(Strings.BattleParty, Strings.RoleList);
+            b.PushContext(Strings.BattleParty);
             for (int i = 0; i < inv.pHeroes.Length; i++)
             {
                 var hero = inv.pHeroes[i];
@@ -68,7 +68,7 @@ namespace PixelHeroesAccess.Module.Screens
             if (anyPoints)
             {
                 b.BeginStop("inv:levelup");
-                b.PushContext(Strings.InventoryLevelUp, Strings.RoleList);
+                b.PushContext(Strings.InventoryLevelUp);
                 for (int i = 0; i < inv.pHeroes.Length; i++)
                 {
                     var hero = inv.pHeroes[i];
@@ -96,7 +96,7 @@ namespace PixelHeroesAccess.Module.Screens
             }
 
             b.BeginStop("inv:backpack");
-            b.PushContext(GameText.Tr(ET.GUI_SH_B_Backpack), Strings.RoleList);
+            b.PushContext(GameText.Tr(ET.GUI_SH_B_Backpack));
             if (inv.pItemsBackpack != null)
                 foreach (var carried in inv.pItemsBackpack)
                 {

@@ -127,7 +127,7 @@ namespace PixelHeroesAccess.Core.Graph
         // ---- the parent stack: contexts + groups ----
 
         /// <summary>Push one NON-FOCUSABLE level of presentation hierarchy ("Difficulty settings",
-        /// "list") onto nodes added from here: pure structure, never navigable, announced when focus
+        /// "table") onto nodes added from here: pure structure, never navigable, announced when focus
         /// enters from outside. Close with <see cref="PopContext"/>.</summary>
         public GraphBuilder PushContext(string label, string role = null, bool positions = true)
         {

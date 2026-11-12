@@ -84,7 +84,7 @@ namespace PixelHeroesAccess.Module.Screens
             var party = Game;
             if (party == null || party.mHeroesTavern == null) return;
             b.BeginStop("arena:heroes");
-            b.PushContext(Strings.TavernCandidates, Strings.RoleList);
+            b.PushContext(Strings.TavernCandidates);
             foreach (var candidate in party.mHeroesTavern)
             {
                 if (candidate == null) continue;
@@ -96,7 +96,7 @@ namespace PixelHeroesAccess.Module.Screens
             b.PopContext();
 
             b.BeginStop("arena:party");
-            b.PushContext(Strings.TavernParty, Strings.RoleList);
+            b.PushContext(Strings.TavernParty);
             for (int i = 0; i < 3; i++)
             {
                 int slot = i;

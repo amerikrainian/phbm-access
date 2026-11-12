@@ -26,7 +26,7 @@ namespace PixelHeroesAccess.Tests
 
             public override void Build(GraphBuilder b)
             {
-                b.PushContext("Settings", "list");
+                b.PushContext("Settings");
                 if (!HideCombo)
                     b.AddItem(ControlId.Structural("displaymode"), new NodeVtable
                     {
@@ -80,7 +80,7 @@ namespace PixelHeroesAccess.Tests
             {
                 ScreenManager.Register(screen);
                 Tick(input);
-                Assert.Equal(new[] { "Settings, list, Display Mode, combo box, Windowed Borderless, 1 of 2" }, spoken.ToArray());
+                Assert.Equal(new[] { "Settings, Display Mode, combo box, Windowed Borderless, 1 of 2" }, spoken.ToArray());
                 spoken.Clear();
                 body(spoken, input);
             }
@@ -131,7 +131,7 @@ namespace PixelHeroesAccess.Tests
             {
                 Assert.True(Navigation.DispatchJustPressed(Action(UiActions.Activate)));
                 Tick(input);
-                Assert.Equal(new[] { "Display Mode, list, Windowed Borderless, button, selected, 2 of 3" }, spoken.ToArray());
+                Assert.Equal(new[] { "Display Mode, Windowed Borderless, button, selected, 2 of 3" }, spoken.ToArray());
                 spoken.Clear();
 
                 // Escape leaves the value alone; the return still re-reads the control.
@@ -206,7 +206,7 @@ namespace PixelHeroesAccess.Tests
                 Assert.True(Navigation.DispatchJustPressed(Action(UiActions.Activate)));
                 Tick(input);
                 // The hero's own label is the row's caption: said once.
-                Assert.Equal(new[] { "Equip Quiver to, list, Kai, button" }, spoken.ToArray());
+                Assert.Equal(new[] { "Equip Quiver to, Kai, button" }, spoken.ToArray());
                 spoken.Clear();
 
                 Assert.True(Navigation.DispatchJustPressed(Action(UiActions.Right)));
@@ -249,7 +249,7 @@ namespace PixelHeroesAccess.Tests
                 Navigation.Attach(null);
                 Navigation.Attach(screen);
                 Tick(input);
-                Assert.Equal(new[] { "Settings, list, Display Mode, combo box, Windowed Borderless, 1 of 2" }, spoken.ToArray());
+                Assert.Equal(new[] { "Settings, Display Mode, combo box, Windowed Borderless, 1 of 2" }, spoken.ToArray());
             });
         }
     }

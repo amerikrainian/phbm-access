@@ -31,7 +31,7 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override void Build(GraphBuilder b)
         {
-            b.PushContext(Strings.ModKeyHelp, Strings.RoleList);
+            b.PushContext(Strings.ModKeyHelp);
             foreach (InputCategory category in Enum.GetValues(typeof(InputCategory)))
             {
                 var c = category;
@@ -83,7 +83,7 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override void Build(GraphBuilder b)
         {
-            b.PushContext(Strings.ModKeyCategory(_category.ToString()), Strings.RoleList, positions: false);
+            b.PushContext(Strings.ModKeyCategory(_category.ToString()), positions: false);
             foreach (var action in InputManager.Actions)
             {
                 if (action.Category != _category) continue;
@@ -118,7 +118,7 @@ namespace PixelHeroesAccess.Module.Screens
 
         public override void Build(GraphBuilder b)
         {
-            b.PushContext(_action.DisplayLabel, Strings.RoleList);
+            b.PushContext(_action.DisplayLabel);
             if (_action.Bindings.Count == 0)
                 b.AddItem(ControlId.Structural("actionkeys:none"), GameNodes.Text(() => Strings.KeysNone));
             foreach (var binding in _action.Bindings)

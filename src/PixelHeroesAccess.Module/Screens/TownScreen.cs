@@ -40,7 +40,7 @@ namespace PixelHeroesAccess.Module.Screens
             // One stop: the street, then the interface, each a region (Alt+Up/Down between them).
             b.BeginStop("town");
             b.SetRegion("town:places");
-            b.PushContext(Strings.TownPlaces, Strings.RoleList);
+            b.PushContext(Strings.TownPlaces);
             var places = new List<Place>();
             for (int k = 0; k < (int)Town.eBuildings.COUNT; k++)
             {
