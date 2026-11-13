@@ -122,6 +122,12 @@ namespace PixelHeroesAccess.Core.Strings
             // chatter of the town, tavern, temple, library and arena among them.
             D("mod.speech_bubbles", "Speech bubbles"),
             D("mod.idle_chatter", "Idle chatter"),
+            // The volume sliders the mod adds to the game's Audio options, shown there as well as
+            // spoken, so in the game's own capitals. {0} = the percentage (0 to 300).
+            D("volume.master", "Master Volume"),
+            D("volume.music", "Music Volume"),
+            D("volume.effects", "Effects Volume"),
+            D("volume.percent", "{0}%"),
             // {0} = the key category, one of the three names below.
             D("mod.key_category", "{0} keys"),
             // The key categories of the "All keys" list: live everywhere, on the focused screen, in a run,
@@ -579,6 +585,10 @@ namespace PixelHeroesAccess.Core.Strings
         public static string ModFocusOnLaunch => Get("mod.focus_on_launch");
         public static string ModSpeechBubbles => Get("mod.speech_bubbles");
         public static string ModIdleChatter => Get("mod.idle_chatter");
+        public static string VolumeMaster => Get("volume.master");
+        public static string VolumeMusic => Get("volume.music");
+        public static string VolumeEffects => Get("volume.effects");
+        public static string VolumePercent(int percent) => F("volume.percent", percent);
         public static string ModKeyCategory(string category)
         {
             string name = "mod.category." + (category ?? "").ToLowerInvariant();

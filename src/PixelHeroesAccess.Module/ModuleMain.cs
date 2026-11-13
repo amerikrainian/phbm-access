@@ -71,6 +71,8 @@ namespace PixelHeroesAccess.Module
             KeyBindings.Persist = saved => host.Settings.Store.SetString(KeyBindings.StoreKey, saved);
             KeyBindings.Load(host.Settings.Store.GetString(KeyBindings.StoreKey, ""));
             RegisterScreens();
+            // The mod's volumes, saved in the game's options file (read before the module came up).
+            Audio.Volume.ReadSaved();
             // The game hooks (the input drivers, the language). Patched by this load's Harmony id,
             // unpatched in Dispose. A failure here is a broken mod: say so, loudly, in the log.
             // Class by class, so one hook a game update broke loses that hook alone.
@@ -295,6 +297,8 @@ namespace PixelHeroesAccess.Module
             try { Screens.Loot.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] loot: " + e); }
             try { Battle.BattleEvents.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] battle events: " + e); }
             try { UI.SpeechBubbles.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] speech bubbles: " + e); }
+            try { Audio.VolumeRows.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] volume rows: " + e); }
+            try { Audio.Volume.Shutdown(restore); } catch (Exception e) { _host?.LogError("[dispose] volume: " + e); }
             try { TextEntry.Shutdown(); } catch (Exception e) { _host?.LogError("[dispose] text entry: " + e); }
             try { FocusMode.Shutdown(restore); } catch (Exception e) { _host?.LogError("[dispose] focus: " + e); }
             try { Gamepad.Reset(); } catch (Exception e) { _host?.LogError("[dispose] gamepad: " + e); }

@@ -1,4 +1,5 @@
 using PixelHeroesAccess.Core.Graph;
+using PixelHeroesAccess.Module.Audio;
 using PixelHeroesAccess.Core.Strings;
 using PixelHeroesAccess.Module.Interop;
 using PixelHeroesAccess.Module.UI;
@@ -17,7 +18,8 @@ namespace PixelHeroesAccess.Module.Screens
     /// selected tab), and the page's choices grouped as the game draws them: the window mode and the
     /// language each a group of radio buttons (the language is offered on the title menu alone, where
     /// a change reloads the game), Run in Background a toggle; the music mode a group of four, Sound
-    /// Effects a toggle. Every choice presses the game's own checkbox button.
+    /// Effects a toggle, then the mod's master, music and effects volumes as sliders (Left and Right),
+    /// which it also draws on the tab. Every game choice presses the game's own checkbox button.
     /// </summary>
     public sealed class PauseScreen : PopupScreen
     {
@@ -72,6 +74,16 @@ namespace PixelHeroesAccess.Module.Screens
                 Toggle(b, "pause:off", pause.v_CheckboxMusicOff, radio: true);
                 b.EndRow();
                 Toggle(b, "pause:sfx", pause.v_CheckboxSFX);
+                // The mod's volumes, drawn under Sound Effects (Audio/VolumeRows).
+                VolumeRows.Ensure(pause);
+                foreach (var channel in Volume.Channels)
+                {
+                    var ch = channel;
+                    b.AddItem(ControlId.Structural("pause:volume:" + ch), GameNodes.Slider(
+                        () => Volume.Label(ch), () => Volume.ValueText(ch),
+                        (sign, large) => { Volume.Adjust(ch, sign * (large ? 5 : 1)); },
+                        () => GameNodes.Usable(VolumeRows.MinusButton(ch))));
+                }
             }
             b.PopContext();
         }

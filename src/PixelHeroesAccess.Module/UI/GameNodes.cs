@@ -198,6 +198,27 @@ namespace PixelHeroesAccess.Module.UI
             };
         }
 
+        /// <summary>A slider: "label, slider, value[, disabled]"; Left and Right call
+        /// <paramref name="adjust"/> with -1 or +1 (and whether a coarse step was asked) and the value is
+        /// spoken, the same one again at either end.</summary>
+        public static NodeVtable Slider(Func<string> label, Func<string> value, Action<int, bool> adjust, Func<bool> enabled = null) => new NodeVtable
+        {
+            ControlType = ControlTypes.Slider,
+            Announcements = new List<NodeAnnouncement>
+            {
+                LabelPart(label),
+                new NodeAnnouncement(value, live: true, kind: AnnouncementKinds.Value),
+                DisabledPart(enabled),
+            },
+            SearchText = label,
+            OnAdjust = (sign, large) =>
+            {
+                if (enabled != null && !enabled()) return;
+                adjust(sign, large);
+            },
+            StateText = value,
+        };
+
         /// <summary>A tab button: "label, tab[, selected]"; landing on it or Enter shows its page.</summary>
         public static NodeVtable Tab(tk2dButton button, Func<bool> selected, Func<string> label = null)
         {

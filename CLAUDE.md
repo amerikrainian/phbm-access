@@ -185,7 +185,8 @@ Five projects, all under `src/`:
   fight's narration hooks), `Nodes/` (`ItemLines`, `HeroLines`, `HeroNodes`, `StatsLines`: the
   reusable readers), `Interop/` (`GameScreens`, `GameText`), `UI/` (`GameNodes` node factories over
   tk2d, `FocusMode`, `Buffers`, `SpeechBubbles`, `IconLabels`, `TextEntry`, `RunGlance`, `Later`, `ScreenIntro`),
-  `Input/` (`KeyboardBinding`, `ControllerBinding`, `Gamepad`, `UnityNavInput`), `LanguageSync`,
+  `Input/` (`KeyboardBinding`, `ControllerBinding`, `Gamepad`, `UnityNavInput`), `Audio/` (below),
+  `LanguageSync`,
   `UpdateChecker`. References `Assembly-CSharp` **publicized**
   (`BepInEx.AssemblyPublicizer.MSBuild`): private members read as plain fields, nested private enums
   too, so a member the game renames is a compile error.
@@ -215,7 +216,7 @@ popups 10, the rename popup 12, the mod menu 50.
   leave town, the info popups, the inventory break, throw away for fist) and the library's choice.
 - **Title**: `CampaignSelectScreen` (a campaign per control, its description and lock line);
   `PauseScreen` (pause page; options page's tabs, the window mode, language and music as radio
-  groups, the toggles). `CreditsScreen`, `ProgressScreen` (campaigns, townspeople, hero classes,
+  groups, the toggles, the mod's three volume sliders). `CreditsScreen`, `ProgressScreen` (campaigns, townspeople, hero classes,
   achievements from `PlayerProgress`, whatever is scrolled into view), `GraveyardScreen` (tombstones
   from their records; landing selects one; its panel the control buffer).
 - **Tavern**: `TavernScreen` (the heroes for hire, the party the game keeps sorted, Dismiss, re-roll,
@@ -271,6 +272,18 @@ popups 10, the rename popup 12, the mod menu 50.
   the idle chatter of town, tavern, temple, library and arena (the town's about every 3.5 seconds).
   The line is taken at `ShowWithText` and said at `InternalShowSpeechBubble` without a delay, since
   some wait two seconds first. Two mod menu settings: Speech bubbles, and Idle chatter among them.
+
+## Volumes (`Module/Audio`)
+The game has only a music mode and an SFX switch; the mod adds master, music and effects volume, 0 to
+300% in steps of 10. `Volume` scales the four `AudioControl` sources after the game's `Update` and
+amplifies past a source's cap of 1 through `AudioListener.volume` (which does go above 1): listener =
+master times K, sources times channel over K, with K = max(1, `mVOLUME` times the larger channel). Saved
+in the game's `Internal\settings.txt` (`VolumeMaster`, `VolumeSoundtrack`, `VolumeEffects`, before its
+`EndOfFile`) by postfixes on `Persistence.SaveOptions`/`LoadOptions`, every change saved at once; the
+game reads an option by the first line CONTAINING its key, so ours contain none of its keys.
+`VolumeRows` draws them on the Audio tab's right column (name, then minus, percentage, plus: copies of
+the Sound Effects checkbox and its caption, handlers by `ButtonPressedEvent`, destroyed in Dispose);
+`PauseScreen` reads them as sliders (Left/Right).
 
 ## Keys
 Focus mode is on at launch; Ctrl+Shift+A toggles it. F1 is the key help: the keys that do something
